@@ -8,11 +8,9 @@ Static marketing website for **THT Orchid Farm** — a family-owned phalaenopsis
 
 ## Running Locally
 
-```bash
-# Open directly in browser
-open index.html
+The pages fetch `varieties.json` via `fetch()`, so they must be served over HTTP — opening `index.html` directly as a `file://` URL will not work.
 
-# Or serve via a local static server
+```bash
 python3 -m http.server 8000
 # Then visit http://localhost:8000
 ```
@@ -21,11 +19,17 @@ No installation, no compilation.
 
 ## Architecture
 
-The site is split across three files: [index.html](index.html) (markup), [styles.css](styles.css) (all styling), and [main.js](main.js) (all behaviour).
+The site is split across these files: [index.html](index.html) (markup), [styles.css](styles.css) (all styling), [main.js](main.js) (nav/menu/form behaviour), and [varieties.json](varieties.json) (all variety data).
 
 - **HTML**: Multi-section SPA with smooth-scroll navigation (Hero → Varieties → About → Care Guide → Contact)
 - **CSS**: Embedded `<style>` block using CSS custom properties for the color/typography design system. Responsive breakpoints at 900px and 560px.
-- **JavaScript**: Embedded `<script>` block with four behaviors:
+## Adding a new variety
+
+Add an entry to [varieties.json](varieties.json). Every page (`index.html`, `varieties.html`, `variety.html`) fetches it at runtime and renders cards dynamically — no HTML changes needed. Set `"image"` to a path like `"images/MyOrchid.jpg"` or `null` to fall back to the CSS gradient defined by `"fill"`.
+
+## Architecture
+
+- **JavaScript**: [main.js](main.js) handles four page-level behaviors:
   1. Nav background transition on scroll (transparent → opaque at 60px)
   2. Mobile hamburger menu (full-screen overlay, closes on link click or Escape)
   3. Scroll-triggered `.fade-up` animations via `IntersectionObserver`

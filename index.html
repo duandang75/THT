@@ -16,7 +16,7 @@
 
   <!-- Desktop links -->
   <ul class="nav-links">
-    <li><a href="#varieties">Varieties</a></li>
+    <li><a href="varieties.html">Varieties</a></li>
     <li><a href="#about">Our Farm</a></li>
     <li><a href="#care">Care Guide</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -33,7 +33,7 @@
 
 <!-- ── Mobile full-screen menu ── -->
 <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-  <a href="#varieties" class="mobile-link">Varieties</a>
+  <a href="varieties.html" class="mobile-link">Varieties</a>
   <div class="mobile-divider"></div>
   <a href="#about" class="mobile-link">Our Farm</a>
   <div class="mobile-divider"></div>
@@ -60,7 +60,7 @@
       We cultivate over 40 varieties of phalaenopsis on our hillside greenhouse — each plant raised from spike to bloom with individual care, ready to grace your home or event.
     </p>
     <div class="hero-actions">
-      <a href="#varieties" class="btn-primary">Browse Varieties</a>
+      <a href="varieties.html" class="btn-primary">Browse Varieties</a>
       <a href="#care" class="btn-ghost">Care Guide →</a>
     </div>
   </div>
@@ -84,62 +84,7 @@
     </div>
     <a href="#contact" class="btn-ghost" style="color:var(--bark);border-color:rgba(45,36,24,0.3)">Request custom order →</a>
   </div>
-  <div class="varieties-grid">
-    <div class="variety-card fade-up">
-      <div class="card-image"><div class="card-image-fill fill-blush"></div><span class="card-badge">Best seller</span></div>
-      <div class="card-body">
-        <p class="card-variety">Phalaenopsis hybrid</p>
-        <h3 class="card-name">Pink Cascade</h3>
-        <p class="card-desc">Soft blush petals with a deeper rose lip. Multiple spikes, long bloom season of 3–5 months. 5" pot.</p>
-        <div class="card-footer"><a href="#contact" class="card-btn">Enquire</a></div>
-      </div>
-    </div>
-    <div class="variety-card fade-up">
-      <div class="card-image"><div class="card-image-fill fill-white"></div></div>
-      <div class="card-body">
-        <p class="card-variety">Phalaenopsis amabilis</p>
-        <h3 class="card-name">Ivory Grace</h3>
-        <p class="card-desc">Classic pure white blooms with a yellow-gold center. A timeless choice for weddings and gifting. 4" pot.</p>
-        <div class="card-footer"><a href="#contact" class="card-btn">Enquire</a></div>
-      </div>
-    </div>
-    <div class="variety-card fade-up">
-      <div class="card-image"><div class="card-image-fill fill-purple"></div><span class="card-badge">Limited</span></div>
-      <div class="card-body">
-        <p class="card-variety">Phalaenopsis hybrid</p>
-        <h3 class="card-name">Midnight Haze</h3>
-        <p class="card-desc">Deep lavender petals fading to violet. Striking specimen plant with up to 18 flowers per spike. 6" pot.</p>
-        <div class="card-footer"><a href="#contact" class="card-btn">Enquire</a></div>
-      </div>
-    </div>
-    <div class="variety-card fade-up">
-      <div class="card-image"><div class="card-image-fill fill-yellow"></div></div>
-      <div class="card-body">
-        <p class="card-variety">Phalaenopsis hybrid</p>
-        <h3 class="card-name">Golden Hour</h3>
-        <p class="card-desc">Warm yellow blooms with a subtle orange blush at the center. Cheerful and long-lasting. 5" pot.</p>
-        <div class="card-footer"><a href="#contact" class="card-btn">Enquire</a></div>
-      </div>
-    </div>
-    <div class="variety-card fade-up">
-      <div class="card-image"><div class="card-image-fill fill-striped"></div></div>
-      <div class="card-body">
-        <p class="card-variety">Phalaenopsis hybrid</p>
-        <h3 class="card-name">Sunrise Stripe</h3>
-        <p class="card-desc">Boldly striped petals in blush and cream. Each bloom is uniquely patterned — no two are identical. 5" pot.</p>
-        <div class="card-footer"><a href="#contact" class="card-btn">Enquire</a></div>
-      </div>
-    </div>
-    <div class="variety-card fade-up">
-      <div class="card-image"><div class="card-image-fill fill-spotted"></div><span class="card-badge">New</span></div>
-      <div class="card-body">
-        <p class="card-variety">Phalaenopsis hieroglyphica</p>
-        <h3 class="card-name">Speckled Beauty</h3>
-        <p class="card-desc">Creamy white petals dotted with lavender speckles. A rare species-type beloved by collectors. 4" pot.</p>
-        <div class="card-footer"><a href="#contact" class="card-btn">Enquire</a></div>
-      </div>
-    </div>
-  </div>
+  <div class="varieties-grid" id="varietiesGrid"></div>
 </section>
 
 <!-- ── About ── -->
@@ -222,12 +167,6 @@
           <label for="interest">I'm interested in</label>
           <select id="interest" name="interest">
             <option value="">Select a variety or purpose…</option>
-            <option>Pink Cascade</option>
-            <option>Ivory Grace</option>
-            <option>Midnight Haze</option>
-            <option>Golden Hour</option>
-            <option>Sunrise Stripe</option>
-            <option>Speckled Beauty</option>
             <option>Wedding / event order</option>
             <option>Wholesale enquiry</option>
             <option>General question</option>
@@ -288,7 +227,7 @@
   <div class="footer-logo">THT Orchid Farm</div>
   <p class="footer-copy">© 2026 THT Orchid Farm. All rights reserved.</p>
   <div class="footer-links">
-    <a href="#varieties">Varieties</a>
+    <a href="varieties.html">Varieties</a>
     <a href="#about">About</a>
     <a href="#care">Care</a>
     <a href="#contact">Contact</a>
@@ -296,5 +235,41 @@
 </footer>
 
 <script src="main.js"></script>
+<script>
+  const fadeObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); fadeObserver.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+
+  function swatchHTML(v) {
+    return v.image
+      ? `<img src="${v.image}" alt="${v.name}" style="width:100%;height:100%;object-fit:cover;display:block">`
+      : `<div class="card-image-fill ${v.fill}"></div>`;
+  }
+
+  fetch('varieties.json')
+    .then(r => r.json())
+    .then(varieties => {
+      document.getElementById('varietiesGrid').innerHTML = varieties.map(v => `
+        <a href="variety.html?id=${v.id}" class="variety-card fade-up">
+          <div class="card-image">${swatchHTML(v)}${v.badge ? `<span class="card-badge">${v.badge}</span>` : ''}</div>
+          <div class="card-body">
+            <p class="card-variety">${v.species}</p>
+            <h3 class="card-name">${v.name}</h3>
+            <p class="card-desc">${v.shortDesc}</p>
+            <div class="card-footer"><span class="card-btn">View details →</span></div>
+          </div>
+        </a>`).join('');
+
+      const select = document.getElementById('interest');
+      const insertBefore = select.querySelector('option[value=""]').nextElementSibling;
+      varieties.forEach(v => {
+        const opt = document.createElement('option');
+        opt.textContent = v.name;
+        select.insertBefore(opt, insertBefore);
+      });
+
+      document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+    });
+</script>
 </body>
 </html>

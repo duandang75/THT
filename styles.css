@@ -230,6 +230,7 @@ section { padding: 6rem 6rem; }
 .variety-card {
   background: var(--cream); border-radius: 4px; overflow: hidden;
   transition: transform 0.3s, box-shadow 0.3s; border: 1px solid rgba(45,36,24,0.07);
+  display: block; text-decoration: none; color: inherit;
 }
 .variety-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(45,36,24,0.12); }
 .card-image { height: 220px; overflow: hidden; position: relative; }
@@ -397,3 +398,123 @@ footer {
 
 /* Prevent body scroll when menu open */
 body.menu-open { overflow: hidden; }
+
+/* ── Varieties page ── */
+.page-hero {
+  padding: 10rem 6rem 5rem;
+  background: var(--bark);
+  color: var(--cream);
+}
+.page-hero .section-eyebrow { color: var(--petal); }
+.page-hero .section-title { color: var(--cream); margin-bottom: 0.8rem; }
+.page-hero-desc { color: rgba(247,243,238,0.6); max-width: 520px; font-size: 1rem; }
+
+.catalog { padding: 5rem 6rem; background: var(--mist); }
+.catalog-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 3rem; }
+
+.product-card {
+  background: var(--cream); border-radius: 4px; overflow: hidden;
+  border: 1px solid rgba(45,36,24,0.07);
+  display: grid; grid-template-columns: 280px 1fr;
+  transition: box-shadow 0.3s;
+  text-decoration: none; color: inherit;
+}
+.product-card:hover { box-shadow: 0 16px 48px rgba(45,36,24,0.12); }
+
+.product-swatch { position: relative; min-height: 300px; }
+.product-swatch .card-image-fill { position: absolute; inset: 0; }
+.product-swatch .card-badge { position: absolute; top: 1rem; left: 1rem; right: auto; }
+
+.product-info { padding: 2rem; display: flex; flex-direction: column; gap: 0.6rem; }
+.product-species { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--rose); }
+.product-name { font-family: var(--font-display); font-size: 1.8rem; font-weight: 400; font-style: italic; color: var(--bark); line-height: 1.1; }
+.product-desc { font-size: 0.88rem; color: rgba(45,36,24,0.65); line-height: 1.8; margin: 0.4rem 0 0.8rem; flex: 1; }
+
+.product-meta { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+.meta-row { display: flex; gap: 0.6rem; align-items: baseline; }
+.meta-label { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(45,36,24,0.4); min-width: 80px; }
+.meta-value { font-size: 0.85rem; color: var(--bark); }
+
+.product-actions { display: flex; gap: 0.8rem; align-items: center; }
+
+@media (max-width: 1200px) {
+  .catalog-grid { grid-template-columns: 1fr; }
+  .product-card { grid-template-columns: 240px 1fr; }
+}
+@media (max-width: 900px) {
+  .page-hero { padding: 8rem 2rem 4rem; }
+  .catalog { padding: 4rem 2rem; }
+  .product-card { grid-template-columns: 1fr; }
+  .product-swatch { min-height: 220px; }
+}
+@media (max-width: 560px) {
+  .product-actions { flex-direction: column; align-items: stretch; }
+  .product-actions .btn-primary, .product-actions .card-btn { text-align: center; }
+}
+
+/* ── Variety detail page ── */
+.detail-hero {
+  display: grid; grid-template-columns: 1fr 1fr;
+  min-height: 80vh; padding-top: 72px;
+}
+.detail-swatch { position: relative; min-height: 500px; }
+.detail-swatch .card-image-fill { position: absolute; inset: 0; }
+.detail-swatch .card-badge { position: absolute; top: 2rem; left: 2rem; font-size: 0.75rem; padding: 0.4rem 1rem; }
+
+.detail-info {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 5rem 5rem 5rem 4rem; background: var(--cream);
+}
+.detail-back {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(45,36,24,0.4); text-decoration: none;
+  margin-bottom: 2.5rem; transition: color 0.2s;
+}
+.detail-back:hover { color: var(--rose); }
+.detail-species { font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rose); margin-bottom: 0.6rem; }
+.detail-name {
+  font-family: var(--font-display); font-size: clamp(2.4rem, 4vw, 3.8rem);
+  font-weight: 300; font-style: italic; color: var(--bark);
+  line-height: 1.05; margin-bottom: 1.4rem;
+}
+.detail-desc { font-size: 1rem; color: rgba(45,36,24,0.65); line-height: 1.9; margin-bottom: 2rem; max-width: 460px; }
+
+.detail-specs {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  border-top: 1px solid rgba(45,36,24,0.1); padding-top: 1.8rem; margin-bottom: 2rem;
+}
+.spec { display: flex; flex-direction: column; gap: 0.25rem; }
+.spec-label { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(45,36,24,0.4); }
+.spec-value { font-size: 0.95rem; color: var(--bark); font-weight: 400; }
+
+.detail-actions { display: flex; gap: 1rem; align-items: center; }
+
+.detail-related { padding: 5rem 6rem; background: var(--mist); }
+.detail-related .section-title { margin-bottom: 2.5rem; }
+.related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.related-card {
+  background: var(--cream); border-radius: 4px; overflow: hidden;
+  border: 1px solid rgba(45,36,24,0.07); text-decoration: none;
+  transition: transform 0.25s, box-shadow 0.25s; display: block;
+}
+.related-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(45,36,24,0.1); }
+.related-swatch { height: 140px; position: relative; }
+.related-swatch .card-image-fill { position: absolute; inset: 0; }
+.related-body { padding: 1rem 1.2rem; }
+.related-name { font-family: var(--font-display); font-size: 1.1rem; font-style: italic; color: var(--bark); margin-bottom: 0.15rem; }
+.related-species { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rose); }
+
+@media (max-width: 900px) {
+  .detail-hero { grid-template-columns: 1fr; min-height: auto; }
+  .detail-swatch { min-height: 300px; }
+  .detail-info { padding: 3rem 2rem; }
+  .detail-related { padding: 4rem 2rem; }
+  .related-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .detail-specs { grid-template-columns: 1fr; }
+  .detail-actions { flex-direction: column; }
+  .detail-actions a { text-align: center; }
+  .related-grid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Our Varieties — THT Orchid Farm</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav id="nav">
+  <a href="index.html" class="nav-logo">THT Orchid Farm</a>
+
+  <ul class="nav-links">
+    <li><a href="varieties.html">Varieties</a></li>
+    <li><a href="index.html#about">Our Farm</a></li>
+    <li><a href="index.html#care">Care Guide</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+    <li><a href="index.html#contact" class="nav-cta">Order Now</a></li>
+  </ul>
+
+  <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- ── Mobile full-screen menu ── -->
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <a href="varieties.html" class="mobile-link">Varieties</a>
+  <div class="mobile-divider"></div>
+  <a href="index.html#about" class="mobile-link">Our Farm</a>
+  <div class="mobile-divider"></div>
+  <a href="index.html#care" class="mobile-link">Care Guide</a>
+  <div class="mobile-divider"></div>
+  <a href="index.html#contact" class="mobile-link">Contact</a>
+  <a href="index.html#contact" class="mobile-link mobile-cta">Order Now</a>
+</div>
+
+<!-- ── Page hero ── -->
+<div class="page-hero">
+  <p class="section-eyebrow">Current season</p>
+  <h1 class="section-title">Our <em>orchid collection</em></h1>
+  <p class="page-hero-desc">Every plant on this page has been raised on our hillside greenhouse for a minimum of 18 months. We grow in small batches — availability changes weekly.</p>
+</div>
+
+<!-- ── Catalog ── -->
+<section class="catalog">
+  <div class="catalog-grid" id="catalogGrid"></div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="footer-logo">THT Orchid Farm</div>
+  <p class="footer-copy">© 2026 THT Orchid Farm. All rights reserved.</p>
+  <div class="footer-links">
+    <a href="varieties.html">Varieties</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#care">Care</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script>
+  const fadeObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); fadeObserver.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+
+  function swatchHTML(v) {
+    return v.image
+      ? `<img src="${v.image}" alt="${v.name}" style="width:100%;height:100%;object-fit:cover;display:block">`
+      : `<div class="card-image-fill ${v.fill}"></div>`;
+  }
+
+  fetch('varieties.json')
+    .then(r => r.json())
+    .then(varieties => {
+      document.getElementById('catalogGrid').innerHTML = varieties.map(v => `
+        <a href="variety.html?id=${v.id}" class="product-card fade-up">
+          <div class="product-swatch">
+            ${swatchHTML(v)}
+            ${v.badge ? `<span class="card-badge">${v.badge}</span>` : ''}
+          </div>
+          <div class="product-info">
+            <p class="product-species">${v.species}</p>
+            <h2 class="product-name">${v.name}</h2>
+            <p class="product-desc">${v.longDesc}</p>
+            <div class="product-meta">
+              <div class="meta-row"><span class="meta-label">Pot size</span><span class="meta-value">${v.pot}</span></div>
+              <div class="meta-row"><span class="meta-label">Bloom time</span><span class="meta-value">${v.bloom}</span></div>
+              <div class="meta-row"><span class="meta-label">Light</span><span class="meta-value">${v.light}</span></div>
+              <div class="meta-row"><span class="meta-label">Care level</span><span class="meta-value">${v.care}</span></div>
+            </div>
+            <div class="product-actions"><span class="btn-primary">View details →</span></div>
+          </div>
+        </a>`).join('');
+
+      document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+    });
+</script>
+</body>
+</html>
