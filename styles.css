@@ -133,6 +133,44 @@ nav.scrolled .hamburger span { background: var(--bark); }
   margin: 1rem 0;
 }
 
+/* ── Language toggle ── */
+/* TOGGLE OFF: change display:none to display:flex to re-enable */
+.lang-toggle, .mobile-lang-toggle { display: none; }
+.lang-toggle {
+  align-items: center; gap: 0.35rem;
+  margin-left: 1.5rem;
+}
+.lang-btn {
+  background: none; border: none; cursor: pointer; padding: 0.2rem 0.1rem;
+  font-family: var(--font-body); font-size: 0.78rem; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  transition: color 0.2s;
+}
+.lang-btn:hover { color: rgba(255,255,255,0.9); }
+.lang-btn.active { color: #fff; font-weight: 500; }
+nav.scrolled .lang-btn { color: rgba(45,36,24,0.45); }
+nav.scrolled .lang-btn:hover { color: var(--bark); }
+nav.scrolled .lang-btn.active { color: var(--bark); }
+.lang-sep {
+  font-size: 0.7rem; color: rgba(255,255,255,0.25);
+  line-height: 1; user-select: none;
+}
+nav.scrolled .lang-sep { color: rgba(45,36,24,0.2); }
+
+/* Mobile lang toggle (inside drawer) */
+.mobile-lang-toggle {
+  display: flex; align-items: center; gap: 0.5rem;
+  margin-top: 2.5rem;
+}
+.mobile-lang-toggle .lang-btn {
+  font-size: 0.85rem; letter-spacing: 0.12em;
+  color: rgba(247,243,238,0.45);
+}
+.mobile-lang-toggle .lang-btn:hover { color: rgba(247,243,238,0.85); }
+.mobile-lang-toggle .lang-btn.active { color: #fff; }
+.mobile-lang-toggle .lang-sep { color: rgba(247,243,238,0.2); }
+
 /* ── Hero — full bleed ── */
 #hero {
   position: relative; min-height: 100vh;
@@ -384,6 +422,7 @@ footer {
 @media (max-width: 900px) {
   nav { padding: 1rem 1.5rem; }
   .nav-links { display: none; }
+  .lang-toggle { display: none; }
   .hamburger { display: flex; }
   .mobile-menu { display: flex; }
 

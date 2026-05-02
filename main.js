@@ -36,6 +36,14 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeMenu();
 });
 
+/* ── Language toggle ── */
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.lang-btn');
+  if (btn && btn.dataset.lang) {
+    i18n.setLang(btn.dataset.lang);
+  }
+});
+
 /* ── Scroll fade-in ── */
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => {
@@ -48,7 +56,7 @@ document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 function handleSubmit(e) {
   e.preventDefault();
   const btn = e.target.querySelector('.form-submit');
-  btn.textContent = 'Message sent ✓';
+  btn.textContent = i18n.t('contact.form.sent');
   btn.style.background = '#4a6741';
   btn.disabled = true;
 }

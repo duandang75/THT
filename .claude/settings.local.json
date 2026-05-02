@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -m json.tool --no-ensure-ascii /Users/duandang/THT/varieties.json)",
+      "Bash(python3 -m json.tool --no-ensure-ascii /Users/duandang/THT/translations.json)"
+    ]
+  }
+}

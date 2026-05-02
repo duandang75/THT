@@ -15,12 +15,18 @@
   <a href="index.html" class="nav-logo">THT Orchid Farm</a>
 
   <ul class="nav-links">
-    <li><a href="varieties.html">Varieties</a></li>
-    <li><a href="index.html#about">Our Farm</a></li>
-    <li><a href="index.html#care">Care Guide</a></li>
-    <li><a href="index.html#contact">Contact</a></li>
-    <li><a href="index.html#contact" class="nav-cta">Order Now</a></li>
+    <li><a href="varieties.html" data-i18n="nav.varieties">Varieties</a></li>
+    <li><a href="index.html#about" data-i18n="nav.ourFarm">Our Farm</a></li>
+    <li><a href="index.html#care" data-i18n="nav.careGuide">Care Guide</a></li>
+    <li><a href="index.html#contact" data-i18n="nav.contact">Contact</a></li>
+    <li><a href="index.html#contact" class="nav-cta" data-i18n="nav.orderNow">Order Now</a></li>
   </ul>
+
+  <div class="lang-toggle">
+    <button class="lang-btn active" data-lang="en">EN</button>
+    <span class="lang-sep">|</span>
+    <button class="lang-btn" data-lang="vi">VI</button>
+  </div>
 
   <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
     <span></span>
@@ -31,21 +37,26 @@
 
 <!-- ── Mobile full-screen menu ── -->
 <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-  <a href="varieties.html" class="mobile-link">Varieties</a>
+  <a href="varieties.html" class="mobile-link" data-i18n="nav.varieties">Varieties</a>
   <div class="mobile-divider"></div>
-  <a href="index.html#about" class="mobile-link">Our Farm</a>
+  <a href="index.html#about" class="mobile-link" data-i18n="nav.ourFarm">Our Farm</a>
   <div class="mobile-divider"></div>
-  <a href="index.html#care" class="mobile-link">Care Guide</a>
+  <a href="index.html#care" class="mobile-link" data-i18n="nav.careGuide">Care Guide</a>
   <div class="mobile-divider"></div>
-  <a href="index.html#contact" class="mobile-link">Contact</a>
-  <a href="index.html#contact" class="mobile-link mobile-cta">Order Now</a>
+  <a href="index.html#contact" class="mobile-link" data-i18n="nav.contact">Contact</a>
+  <a href="index.html#contact" class="mobile-link mobile-cta" data-i18n="nav.orderNow">Order Now</a>
+  <div class="mobile-lang-toggle">
+    <button class="lang-btn active" data-lang="en">EN</button>
+    <span class="lang-sep">|</span>
+    <button class="lang-btn" data-lang="vi">VI</button>
+  </div>
 </div>
 
 <!-- ── Page hero ── -->
 <div class="page-hero">
-  <p class="section-eyebrow">Current season</p>
-  <h1 class="section-title">Our <em>orchid collection</em></h1>
-  <p class="page-hero-desc">Every plant on this page has been raised on our hillside greenhouse for a minimum of 18 months. We grow in small batches — availability changes weekly.</p>
+  <p class="section-eyebrow" data-i18n="catalog.eyebrow">Current season</p>
+  <h1 class="section-title"><span data-i18n="catalog.title">Our</span> <em data-i18n="catalog.title.em">orchid collection</em></h1>
+  <p class="page-hero-desc" data-i18n="catalog.desc">Every plant on this page has been raised on our hillside greenhouse for a minimum of 18 months. We grow in small batches — availability changes weekly.</p>
 </div>
 
 <!-- ── Catalog ── -->
@@ -56,15 +67,16 @@
 <!-- ── Footer ── -->
 <footer>
   <div class="footer-logo">THT Orchid Farm</div>
-  <p class="footer-copy">© 2026 THT Orchid Farm. All rights reserved.</p>
+  <p class="footer-copy" data-i18n="footer.copy">© 2026 THT Orchid Farm. All rights reserved.</p>
   <div class="footer-links">
-    <a href="varieties.html">Varieties</a>
-    <a href="index.html#about">About</a>
-    <a href="index.html#care">Care</a>
-    <a href="index.html#contact">Contact</a>
+    <a href="varieties.html" data-i18n="nav.varieties">Varieties</a>
+    <a href="index.html#about" data-i18n="nav.ourFarm">About</a>
+    <a href="index.html#care" data-i18n="nav.careGuide">Care</a>
+    <a href="index.html#contact" data-i18n="nav.contact">Contact</a>
   </div>
 </footer>
 
+<script src="i18n.js"></script>
 <script src="main.js"></script>
 <script>
   const fadeObserver = new IntersectionObserver(entries => {
@@ -77,31 +89,45 @@
       : `<div class="card-image-fill ${v.fill}"></div>`;
   }
 
-  fetch('varieties.json')
-    .then(r => r.json())
-    .then(varieties => {
-      document.getElementById('catalogGrid').innerHTML = varieties.map(v => `
-        <a href="variety.html?id=${v.id}" class="product-card fade-up">
-          <div class="product-swatch">
-            ${swatchHTML(v)}
-            ${v.badge ? `<span class="card-badge">${v.badge}</span>` : ''}
+  function renderCatalog(varieties) {
+    const lang = i18n.getLang();
+    const badge = v => lang === 'vi' && v.badge_vi ? v.badge_vi : v.badge;
+    document.getElementById('catalogGrid').innerHTML = varieties.map(v => `
+      <a href="variety.html?id=${v.id}" class="product-card fade-up">
+        <div class="product-swatch">
+          ${swatchHTML(v)}
+          ${badge(v) ? `<span class="card-badge">${badge(v)}</span>` : ''}
+        </div>
+        <div class="product-info">
+          <p class="product-species">${v.species}</p>
+          <h2 class="product-name">${lang === 'vi' ? v.name_vi : v.name}</h2>
+          <p class="product-desc">${lang === 'vi' ? v.longDesc_vi : v.longDesc}</p>
+          <div class="product-meta">
+            <div class="meta-row"><span class="meta-label">${i18n.t('detail.spec.pot')}</span><span class="meta-value">${v.pot}</span></div>
+            <div class="meta-row"><span class="meta-label">${i18n.t('detail.spec.bloom')}</span><span class="meta-value">${v.bloom}</span></div>
+            <div class="meta-row"><span class="meta-label">${i18n.t('detail.spec.light')}</span><span class="meta-value">${v.light}</span></div>
+            <div class="meta-row"><span class="meta-label">${i18n.t('detail.spec.care')}</span><span class="meta-value">${v.care}</span></div>
           </div>
-          <div class="product-info">
-            <p class="product-species">${v.species}</p>
-            <h2 class="product-name">${v.name}</h2>
-            <p class="product-desc">${v.longDesc}</p>
-            <div class="product-meta">
-              <div class="meta-row"><span class="meta-label">Pot size</span><span class="meta-value">${v.pot}</span></div>
-              <div class="meta-row"><span class="meta-label">Bloom time</span><span class="meta-value">${v.bloom}</span></div>
-              <div class="meta-row"><span class="meta-label">Light</span><span class="meta-value">${v.light}</span></div>
-              <div class="meta-row"><span class="meta-label">Care level</span><span class="meta-value">${v.care}</span></div>
-            </div>
-            <div class="product-actions"><span class="btn-primary">View details →</span></div>
-          </div>
-        </a>`).join('');
+          <div class="product-actions"><span class="btn-primary">${i18n.t('varieties.viewDetails')}</span></div>
+        </div>
+      </a>`).join('');
 
-      document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+    document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+  }
+
+  let cachedVarieties = null;
+
+  Promise.all([fetch('varieties.json').then(r => r.json()), i18n.load()])
+    .then(([varieties]) => {
+      cachedVarieties = varieties;
+      renderCatalog(varieties);
+      i18n.apply();
     });
+
+  document.addEventListener('langchange', () => {
+    if (cachedVarieties) renderCatalog(cachedVarieties);
+    i18n.apply();
+  });
 </script>
 </body>
 </html>

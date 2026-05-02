@@ -16,12 +16,18 @@
 
   <!-- Desktop links -->
   <ul class="nav-links">
-    <li><a href="varieties.html">Varieties</a></li>
-    <li><a href="#about">Our Farm</a></li>
-    <li><a href="#care">Care Guide</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#contact" class="nav-cta">Order Now</a></li>
+    <li><a href="varieties.html" data-i18n="nav.varieties">Varieties</a></li>
+    <li><a href="#about" data-i18n="nav.ourFarm">Our Farm</a></li>
+    <li><a href="#care" data-i18n="nav.careGuide">Care Guide</a></li>
+    <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+    <li><a href="#contact" class="nav-cta" data-i18n="nav.orderNow">Order Now</a></li>
   </ul>
+
+  <div class="lang-toggle">
+    <button class="lang-btn active" data-lang="en">EN</button>
+    <span class="lang-sep">|</span>
+    <button class="lang-btn" data-lang="vi">VI</button>
+  </div>
 
   <!-- Hamburger (mobile only) -->
   <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
@@ -33,14 +39,19 @@
 
 <!-- ── Mobile full-screen menu ── -->
 <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-  <a href="varieties.html" class="mobile-link">Varieties</a>
+  <a href="varieties.html" class="mobile-link" data-i18n="nav.varieties">Varieties</a>
   <div class="mobile-divider"></div>
-  <a href="#about" class="mobile-link">Our Farm</a>
+  <a href="#about" class="mobile-link" data-i18n="nav.ourFarm">Our Farm</a>
   <div class="mobile-divider"></div>
-  <a href="#care" class="mobile-link">Care Guide</a>
+  <a href="#care" class="mobile-link" data-i18n="nav.careGuide">Care Guide</a>
   <div class="mobile-divider"></div>
-  <a href="#contact" class="mobile-link">Contact</a>
-  <a href="#contact" class="mobile-link mobile-cta">Order Now</a>
+  <a href="#contact" class="mobile-link" data-i18n="nav.contact">Contact</a>
+  <a href="#contact" class="mobile-link mobile-cta" data-i18n="nav.orderNow">Order Now</a>
+  <div class="mobile-lang-toggle">
+    <button class="lang-btn active" data-lang="en">EN</button>
+    <span class="lang-sep">|</span>
+    <button class="lang-btn" data-lang="vi">VI</button>
+  </div>
 </div>
 
 <!-- ── Hero ── -->
@@ -52,16 +63,16 @@
   <div class="hero-right-vignette"></div>
 
   <div class="hero-text fade-up">
-    <p class="hero-eyebrow">Family-grown phalaenopsis since 2018</p>
+    <p class="hero-eyebrow" data-i18n="hero.eyebrow">Family-grown phalaenopsis since 2018</p>
     <h1 class="hero-title">
-      Rare orchids,<br><em>grown with patience</em>
+      <span data-i18n="hero.title">Rare orchids,</span><br><em data-i18n="hero.title.em">grown with patience</em>
     </h1>
-    <p class="hero-desc">
+    <p class="hero-desc" data-i18n="hero.desc">
       We cultivate over 40 varieties of phalaenopsis on our hillside greenhouse — each plant raised from spike to bloom with individual care, ready to grace your home or event.
     </p>
     <div class="hero-actions">
-      <a href="varieties.html" class="btn-primary">Browse Varieties</a>
-      <a href="#care" class="btn-ghost">Care Guide →</a>
+      <a href="varieties.html" class="btn-primary" data-i18n="hero.browseVarieties">Browse Varieties</a>
+      <a href="#care" class="btn-ghost" data-i18n="hero.careGuide">Care Guide →</a>
     </div>
   </div>
 
@@ -79,10 +90,10 @@
 <section id="varieties">
   <div class="varieties-header fade-up">
     <div>
-      <p class="section-eyebrow">Current season</p>
-      <h2 class="section-title">Our <em>orchid collection</em></h2>
+      <p class="section-eyebrow" data-i18n="varieties.eyebrow">Current season</p>
+      <h2 class="section-title"><span data-i18n="varieties.title">Our</span> <em data-i18n="varieties.title.em">orchid collection</em></h2>
     </div>
-    <a href="#contact" class="btn-ghost" style="color:var(--bark);border-color:rgba(45,36,24,0.3)">Request custom order →</a>
+    <a href="#contact" class="btn-ghost" style="color:var(--bark);border-color:rgba(45,36,24,0.3)" data-i18n="varieties.requestCustom">Request custom order →</a>
   </div>
   <div class="varieties-grid" id="varietiesGrid"></div>
 </section>
@@ -94,51 +105,60 @@
       <img src="images/Farm.jpg" alt="Our greenhouse" style="width:100%;height:100%;object-fit:cover;border-radius:4px">
     </div>
     <div class="about-stat">
-      <div class="stat-number">40+</div>
-      <div class="stat-label">Varieties in bloom</div>
+      <div class="stat-number" data-i18n="about.stat.number">40+</div>
+      <div class="stat-label" data-i18n="about.stat.label">Varieties in bloom</div>
     </div>
   </div>
   <div class="about-text fade-up">
-    <p class="section-eyebrow">Our story</p>
-    <h2 class="section-title">A hillside greenhouse, <em>8 years in the making</em></h2>
-    <p class="about-body">
+    <p class="section-eyebrow" data-i18n="about.eyebrow">Our story</p>
+    <h2 class="section-title"><span data-i18n="about.title">A hillside greenhouse,</span> <em data-i18n="about.title.em">8 years in the making</em></h2>
+    <p class="about-body" data-i18n="about.body1">
       What began in 2018 as a single greenhouse and a passion for phalaenopsis has grown into one of the region's most trusted specialty orchid farms — today supplying retail and trade partners nationwide alongside our direct-to-home customers.
     </p>
-    <p class="about-body">
+    <p class="about-body" data-i18n="about.body2">
       We grow in natural-light greenhouses, using properly treated well water and bark-based media that lets roots breathe as nature intended. Every plant is propagated from proven parent stock and raised for a minimum of 18 months before it leaves our care — a standard our retail and trade partners have come to rely on.
     </p>
     <div class="about-highlights">
-      <div class="highlight"><div class="highlight-title">Established</div><div class="highlight-value">2018</div></div>
-      <div class="highlight"><div class="highlight-title">Growing method</div><div class="highlight-value">Natural light</div></div>
-      <div class="highlight"><div class="highlight-title">Shipping</div><div class="highlight-value">Nationwide</div></div>
+      <div class="highlight">
+        <div class="highlight-title" data-i18n="about.highlight1.title">Established</div>
+        <div class="highlight-value" data-i18n="about.highlight1.value">2018</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-title" data-i18n="about.highlight2.title">Growing method</div>
+        <div class="highlight-value" data-i18n="about.highlight2.value">Natural light</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-title" data-i18n="about.highlight3.title">Shipping</div>
+        <div class="highlight-value" data-i18n="about.highlight3.value">Nationwide</div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ── Care Guide ── -->
 <section id="care">
-  <p class="section-eyebrow">Growing tips</p>
-  <h2 class="section-title">Caring for your <em>phalaenopsis</em></h2>
+  <p class="section-eyebrow" data-i18n="care.eyebrow">Growing tips</p>
+  <h2 class="section-title"><span data-i18n="care.title">Caring for your</span> <em data-i18n="care.title.em">phalaenopsis</em></h2>
   <div class="care-grid">
     <div class="care-item fade-up">
       <div class="care-icon">☀</div>
-      <h3 class="care-item-title">Light</h3>
-      <p class="care-item-desc">Bright, indirect light near an east-facing window. Avoid harsh afternoon direct sun, which scorches leaves.</p>
+      <h3 class="care-item-title" data-i18n="care.light.title">Light</h3>
+      <p class="care-item-desc" data-i18n="care.light.desc">Bright, indirect light near an east-facing window. Avoid harsh afternoon direct sun, which scorches leaves.</p>
     </div>
     <div class="care-item fade-up">
       <div class="care-icon">💧</div>
-      <h3 class="care-item-title">Watering</h3>
-      <p class="care-item-desc">Water thoroughly every 7–10 days. Allow roots to dry slightly between waterings. Never let the plant sit in standing water.</p>
+      <h3 class="care-item-title" data-i18n="care.watering.title">Watering</h3>
+      <p class="care-item-desc" data-i18n="care.watering.desc">Water thoroughly every 7–10 days. Allow roots to dry slightly between waterings. Never let the plant sit in standing water.</p>
     </div>
     <div class="care-item fade-up">
       <div class="care-icon">🌡</div>
-      <h3 class="care-item-title">Temperature</h3>
-      <p class="care-item-desc">Ideal range is 18–28 °C. A 5–8 °C drop at night for 4 weeks in autumn encourages new flower spikes.</p>
+      <h3 class="care-item-title" data-i18n="care.temperature.title">Temperature</h3>
+      <p class="care-item-desc" data-i18n="care.temperature.desc">Ideal range is 18–28 °C. A 5–8 °C drop at night for 4 weeks in autumn encourages new flower spikes.</p>
     </div>
     <div class="care-item fade-up">
       <div class="care-icon">🌿</div>
-      <h3 class="care-item-title">Feeding</h3>
-      <p class="care-item-desc">Use a balanced orchid fertiliser at quarter-strength every second watering during active growth. Reduce in winter.</p>
+      <h3 class="care-item-title" data-i18n="care.feeding.title">Feeding</h3>
+      <p class="care-item-desc" data-i18n="care.feeding.desc">Use a balanced orchid fertiliser at quarter-strength every second watering during active growth. Reduce in winter.</p>
     </div>
   </div>
 </section>
@@ -148,41 +168,41 @@
   <div class="contact-grid fade-up">
     <div>
       <div class="contact-header">
-        <p class="section-eyebrow">Get in touch</p>
-        <h2 class="section-title">Order or <em>ask us anything</em></h2>
-        <p class="contact-intro">We accept pre-orders for current-season stock and custom requests for events. Use the form below and we'll respond within one business day.</p>
+        <p class="section-eyebrow" data-i18n="contact.eyebrow">Get in touch</p>
+        <h2 class="section-title"><span data-i18n="contact.title">Order or</span> <em data-i18n="contact.title.em">ask us anything</em></h2>
+        <p class="contact-intro" data-i18n="contact.intro">We accept pre-orders for current-season stock and custom requests for events. Use the form below and we'll respond within one business day.</p>
       </div>
       <form class="contact-form" onsubmit="handleSubmit(event)">
         <div class="form-row">
           <div class="form-group">
-            <label for="name">Your name</label>
-            <input type="text" id="name" name="name" placeholder="Jane Smith" required/>
+            <label for="name" data-i18n="contact.form.name">Your name</label>
+            <input type="text" id="name" name="name" data-i18n-placeholder="contact.form.name.placeholder" placeholder="Jane Smith" required/>
           </div>
           <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="email" id="email" name="email" placeholder="jane@example.com" required/>
+            <label for="email" data-i18n="contact.form.email">Email address</label>
+            <input type="email" id="email" name="email" data-i18n-placeholder="contact.form.email.placeholder" placeholder="jane@example.com" required/>
           </div>
         </div>
         <div class="form-group">
-          <label for="interest">I'm interested in</label>
+          <label for="interest" data-i18n="contact.form.interest">I'm interested in</label>
           <select id="interest" name="interest">
-            <option value="">Select a variety or purpose…</option>
-            <option>Wedding / event order</option>
-            <option>Wholesale enquiry</option>
-            <option>General question</option>
+            <option value="" data-i18n="contact.form.interest.placeholder">Select a variety or purpose…</option>
+            <option data-i18n="contact.form.interest.wedding">Wedding / event order</option>
+            <option data-i18n="contact.form.interest.wholesale">Wholesale enquiry</option>
+            <option data-i18n="contact.form.interest.general">General question</option>
           </select>
         </div>
         <div class="form-group">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" placeholder="Tell us about your order, quantity, or any questions…"></textarea>
+          <label for="message" data-i18n="contact.form.message">Message</label>
+          <textarea id="message" name="message" data-i18n-placeholder="contact.form.message.placeholder" placeholder="Tell us about your order, quantity, or any questions…"></textarea>
         </div>
-        <button type="submit" class="form-submit">Send Message</button>
+        <button type="submit" class="form-submit" data-i18n="contact.form.send">Send Message</button>
       </form>
     </div>
     <div class="map-panel">
       <div>
-        <p class="map-eyebrow">Find us</p>
-        <h2 class="map-title">Our <em>farm location</em></h2>
+        <p class="map-eyebrow" data-i18n="map.eyebrow">Find us</p>
+        <h2 class="map-title"><span data-i18n="map.title">Our</span> <em data-i18n="map.title.em">farm location</em></h2>
       </div>
       <div class="map-frame">
         <iframe
@@ -196,25 +216,25 @@
         <div class="map-detail-row">
           <div class="map-detail-icon">📍</div>
           <div>
-            <div class="map-detail-label">Address</div>
-            <div class="map-detail-value">Thôn Lạc Thạnh, Đơn Dương<br/>Lâm Đồng, Vietnam</div>
+            <div class="map-detail-label" data-i18n="map.address.label">Address</div>
+            <div class="map-detail-value" data-i18n-html="map.address.value">Thôn Lạc Thạnh, Đơn Dương<br/>Lâm Đồng, Vietnam</div>
           </div>
         </div>
         <div class="map-detail-row">
           <div class="map-detail-icon">🕐</div>
           <div>
-            <div class="map-detail-label">Farm visits</div>
-            <div class="map-detail-value">By appointment only — contact us to arrange a visit</div>
+            <div class="map-detail-label" data-i18n="map.visits.label">Farm visits</div>
+            <div class="map-detail-value" data-i18n="map.visits.value">By appointment only — contact us to arrange a visit</div>
           </div>
         </div>
         <div class="map-detail-row">
           <div class="map-detail-icon">🌿</div>
           <div>
-            <div class="map-detail-label">Shipping</div>
-            <div class="map-detail-value">Nationwide delivery available — order by Sunday for the following week's dispatch</div>
+            <div class="map-detail-label" data-i18n="map.shipping.label">Shipping</div>
+            <div class="map-detail-value" data-i18n="map.shipping.value">Nationwide delivery available — order by Sunday for the following week's dispatch</div>
           </div>
         </div>
-        <a class="map-directions"
+        <a class="map-directions" data-i18n="map.directions"
            href="https://www.google.com/maps/search/?api=1&query=Thôn+Lạc+Thạnh,+Đơn+Dương,+Lâm+Đồng,+Vietnam"
            target="_blank" rel="noopener">Get directions →</a>
       </div>
@@ -225,15 +245,16 @@
 <!-- ── Footer ── -->
 <footer>
   <div class="footer-logo">THT Orchid Farm</div>
-  <p class="footer-copy">© 2026 THT Orchid Farm. All rights reserved.</p>
+  <p class="footer-copy" data-i18n="footer.copy">© 2026 THT Orchid Farm. All rights reserved.</p>
   <div class="footer-links">
-    <a href="varieties.html">Varieties</a>
-    <a href="#about">About</a>
-    <a href="#care">Care</a>
-    <a href="#contact">Contact</a>
+    <a href="varieties.html" data-i18n="nav.varieties">Varieties</a>
+    <a href="#about" data-i18n="nav.ourFarm">About</a>
+    <a href="#care" data-i18n="nav.careGuide">Care</a>
+    <a href="#contact" data-i18n="nav.contact">Contact</a>
   </div>
 </footer>
 
+<script src="i18n.js"></script>
 <script src="main.js"></script>
 <script>
   const fadeObserver = new IntersectionObserver(entries => {
@@ -246,30 +267,54 @@
       : `<div class="card-image-fill ${v.fill}"></div>`;
   }
 
-  fetch('varieties.json')
-    .then(r => r.json())
-    .then(varieties => {
-      document.getElementById('varietiesGrid').innerHTML = varieties.map(v => `
-        <a href="variety.html?id=${v.id}" class="variety-card fade-up">
-          <div class="card-image">${swatchHTML(v)}${v.badge ? `<span class="card-badge">${v.badge}</span>` : ''}</div>
-          <div class="card-body">
-            <p class="card-variety">${v.species}</p>
-            <h3 class="card-name">${v.name}</h3>
-            <p class="card-desc">${v.shortDesc}</p>
-            <div class="card-footer"><span class="card-btn">View details →</span></div>
-          </div>
-        </a>`).join('');
+  function renderVarieties(varieties) {
+    const lang = i18n.getLang();
+    const badge = v => lang === 'vi' && v.badge_vi ? v.badge_vi : v.badge;
+    document.getElementById('varietiesGrid').innerHTML = varieties.map(v => `
+      <a href="variety.html?id=${v.id}" class="variety-card fade-up">
+        <div class="card-image">${swatchHTML(v)}${badge(v) ? `<span class="card-badge">${badge(v)}</span>` : ''}</div>
+        <div class="card-body">
+          <p class="card-variety">${v.species}</p>
+          <h3 class="card-name">${lang === 'vi' ? v.name_vi : v.name}</h3>
+          <p class="card-desc">${lang === 'vi' ? v.shortDesc_vi : v.shortDesc}</p>
+          <div class="card-footer"><span class="card-btn">${i18n.t('varieties.viewDetails')}</span></div>
+        </div>
+      </a>`).join('');
+
+    document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+  }
+
+  let cachedVarieties = null;
+
+  Promise.all([fetch('varieties.json').then(r => r.json()), i18n.load()])
+    .then(([varieties]) => {
+      cachedVarieties = varieties;
 
       const select = document.getElementById('interest');
       const insertBefore = select.querySelector('option[value=""]').nextElementSibling;
       varieties.forEach(v => {
         const opt = document.createElement('option');
-        opt.textContent = v.name;
+        opt.textContent = i18n.getLang() === 'vi' ? v.name_vi : v.name;
+        opt.dataset.nameEn = v.name;
+        opt.dataset.nameVi = v.name_vi;
         select.insertBefore(opt, insertBefore);
       });
 
-      document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+      renderVarieties(varieties);
+      i18n.apply();
     });
+
+  document.addEventListener('langchange', () => {
+    if (cachedVarieties) {
+      renderVarieties(cachedVarieties);
+
+      const select = document.getElementById('interest');
+      select.querySelectorAll('option[data-name-en]').forEach(opt => {
+        opt.textContent = i18n.getLang() === 'vi' ? opt.dataset.nameVi : opt.dataset.nameEn;
+      });
+    }
+    i18n.apply();
+  });
 </script>
 </body>
 </html>

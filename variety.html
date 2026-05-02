@@ -15,12 +15,18 @@
   <a href="index.html" class="nav-logo">THT Orchid Farm</a>
 
   <ul class="nav-links">
-    <li><a href="varieties.html">Varieties</a></li>
-    <li><a href="index.html#about">Our Farm</a></li>
-    <li><a href="index.html#care">Care Guide</a></li>
-    <li><a href="index.html#contact">Contact</a></li>
-    <li><a href="index.html#contact" class="nav-cta">Order Now</a></li>
+    <li><a href="varieties.html" data-i18n="nav.varieties">Varieties</a></li>
+    <li><a href="index.html#about" data-i18n="nav.ourFarm">Our Farm</a></li>
+    <li><a href="index.html#care" data-i18n="nav.careGuide">Care Guide</a></li>
+    <li><a href="index.html#contact" data-i18n="nav.contact">Contact</a></li>
+    <li><a href="index.html#contact" class="nav-cta" data-i18n="nav.orderNow">Order Now</a></li>
   </ul>
+
+  <div class="lang-toggle">
+    <button class="lang-btn active" data-lang="en">EN</button>
+    <span class="lang-sep">|</span>
+    <button class="lang-btn" data-lang="vi">VI</button>
+  </div>
 
   <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
     <span></span>
@@ -31,14 +37,19 @@
 
 <!-- ── Mobile full-screen menu ── -->
 <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-  <a href="varieties.html" class="mobile-link">Varieties</a>
+  <a href="varieties.html" class="mobile-link" data-i18n="nav.varieties">Varieties</a>
   <div class="mobile-divider"></div>
-  <a href="index.html#about" class="mobile-link">Our Farm</a>
+  <a href="index.html#about" class="mobile-link" data-i18n="nav.ourFarm">Our Farm</a>
   <div class="mobile-divider"></div>
-  <a href="index.html#care" class="mobile-link">Care Guide</a>
+  <a href="index.html#care" class="mobile-link" data-i18n="nav.careGuide">Care Guide</a>
   <div class="mobile-divider"></div>
-  <a href="index.html#contact" class="mobile-link">Contact</a>
-  <a href="index.html#contact" class="mobile-link mobile-cta">Order Now</a>
+  <a href="index.html#contact" class="mobile-link" data-i18n="nav.contact">Contact</a>
+  <a href="index.html#contact" class="mobile-link mobile-cta" data-i18n="nav.orderNow">Order Now</a>
+  <div class="mobile-lang-toggle">
+    <button class="lang-btn active" data-lang="en">EN</button>
+    <span class="lang-sep">|</span>
+    <button class="lang-btn" data-lang="vi">VI</button>
+  </div>
 </div>
 
 <!-- ── Detail hero (populated by JS) ── -->
@@ -48,38 +59,41 @@
     <span class="card-badge" id="detailBadge"></span>
   </div>
   <div class="detail-info">
-    <a href="varieties.html" class="detail-back">← All varieties</a>
+    <a href="varieties.html" class="detail-back" data-i18n="detail.back">← All varieties</a>
     <p class="detail-species" id="detailSpecies"></p>
     <h1 class="detail-name" id="detailName"></h1>
     <p class="detail-desc" id="detailDesc"></p>
     <div class="detail-specs" id="detailSpecs"></div>
     <div class="detail-actions">
-      <a href="index.html#contact" class="btn-primary">Enquire about this variety</a>
+      <a href="index.html#contact" class="btn-primary" data-i18n="detail.enquire">Enquire about this variety</a>
     </div>
   </div>
 </div>
 
 <!-- ── Related varieties ── -->
 <section class="detail-related">
-  <h2 class="section-title">You might also <em>like</em></h2>
+  <h2 class="section-title"><span data-i18n="detail.related.title">You might also</span> <em data-i18n="detail.related.title.em">like</em></h2>
   <div class="related-grid" id="relatedGrid"></div>
 </section>
 
 <!-- ── Footer ── -->
 <footer>
   <div class="footer-logo">THT Orchid Farm</div>
-  <p class="footer-copy">© 2026 THT Orchid Farm. All rights reserved.</p>
+  <p class="footer-copy" data-i18n="footer.copy">© 2026 THT Orchid Farm. All rights reserved.</p>
   <div class="footer-links">
-    <a href="varieties.html">Varieties</a>
-    <a href="index.html#about">About</a>
-    <a href="index.html#care">Care</a>
-    <a href="index.html#contact">Contact</a>
+    <a href="varieties.html" data-i18n="nav.varieties">Varieties</a>
+    <a href="index.html#about" data-i18n="nav.ourFarm">About</a>
+    <a href="index.html#care" data-i18n="nav.careGuide">Care</a>
+    <a href="index.html#contact" data-i18n="nav.contact">Contact</a>
   </div>
 </footer>
 
+<script src="i18n.js"></script>
 <script src="main.js"></script>
 <script>
   const id = new URLSearchParams(window.location.search).get('id');
+  let cachedVarieties = null;
+  let currentVariety = null;
 
   function swatchHTML(v) {
     return v.image
@@ -87,12 +101,53 @@
       : `<div class="card-image-fill ${v.fill}"></div>`;
   }
 
-  fetch('varieties.json')
-    .then(r => r.json())
-    .then(varieties => {
-      const variety = varieties.find(v => v.id === id);
+  function renderDetail(variety, varieties) {
+    const lang = i18n.getLang();
+    const badge = lang === 'vi' && variety.badge_vi ? variety.badge_vi : variety.badge;
+    const name = lang === 'vi' ? variety.name_vi : variety.name;
+    const desc = lang === 'vi' ? variety.longDesc_vi : variety.longDesc;
 
-      if (!variety) {
+    document.title = name + ' — THT Orchid Farm';
+    document.getElementById('detailSpecies').textContent = variety.species;
+    document.getElementById('detailName').textContent = name;
+    document.getElementById('detailDesc').textContent = desc;
+
+    const badgeEl = document.getElementById('detailBadge');
+    if (badgeEl) {
+      if (badge) { badgeEl.textContent = badge; }
+      else { badgeEl.style.display = 'none'; }
+    }
+
+    document.getElementById('detailSpecs').innerHTML = [
+      { label: i18n.t('detail.spec.pot'),         value: variety.pot },
+      { label: i18n.t('detail.spec.bloom'),        value: variety.bloom },
+      { label: i18n.t('detail.spec.light'),        value: variety.light },
+      { label: i18n.t('detail.spec.care'),         value: variety.care },
+      { label: i18n.t('detail.spec.watering'),     value: variety.watering },
+      { label: i18n.t('detail.spec.temperature'),  value: variety.temperature },
+    ].map(s => `<div class="spec"><span class="spec-label">${s.label}</span><span class="spec-value">${s.value}</span></div>`)
+     .join('');
+
+    document.getElementById('relatedGrid').innerHTML = varieties
+      .filter(v => v.id !== id)
+      .slice(0, 3)
+      .map(v => `
+        <a href="variety.html?id=${v.id}" class="related-card">
+          <div class="related-swatch">${swatchHTML(v)}</div>
+          <div class="related-body">
+            <div class="related-name">${lang === 'vi' ? v.name_vi : v.name}</div>
+            <div class="related-species">${v.species}</div>
+          </div>
+        </a>`)
+      .join('');
+  }
+
+  Promise.all([fetch('varieties.json').then(r => r.json()), i18n.load()])
+    .then(([varieties]) => {
+      cachedVarieties = varieties;
+      currentVariety = varieties.find(v => v.id === id);
+
+      if (!currentVariety) {
         document.title = 'Not found — THT Orchid Farm';
         document.getElementById('detailHero').innerHTML =
           '<div style="padding:10rem 3rem;text-align:center;grid-column:1/-1">' +
@@ -103,41 +158,18 @@
         return;
       }
 
-      document.title = variety.name + ' — THT Orchid Farm';
-
       document.getElementById('detailFill').replaceWith(
-        Object.assign(document.createElement('div'), { innerHTML: swatchHTML(variety) }).firstChild
+        Object.assign(document.createElement('div'), { innerHTML: swatchHTML(currentVariety) }).firstChild
       );
-      document.getElementById('detailSpecies').textContent = variety.species;
-      document.getElementById('detailName').textContent = variety.name;
-      document.getElementById('detailDesc').textContent = variety.longDesc;
 
-      const badge = document.getElementById('detailBadge');
-      if (variety.badge) { badge.textContent = variety.badge; } else { badge.remove(); }
-
-      document.getElementById('detailSpecs').innerHTML = [
-        { label: 'Pot size',    value: variety.pot },
-        { label: 'Bloom time',  value: variety.bloom },
-        { label: 'Light',       value: variety.light },
-        { label: 'Care level',  value: variety.care },
-        { label: 'Watering',    value: variety.watering },
-        { label: 'Temperature', value: variety.temperature },
-      ].map(s => `<div class="spec"><span class="spec-label">${s.label}</span><span class="spec-value">${s.value}</span></div>`)
-       .join('');
-
-      document.getElementById('relatedGrid').innerHTML = varieties
-        .filter(v => v.id !== id)
-        .slice(0, 3)
-        .map(v => `
-          <a href="variety.html?id=${v.id}" class="related-card">
-            <div class="related-swatch">${swatchHTML(v)}</div>
-            <div class="related-body">
-              <div class="related-name">${v.name}</div>
-              <div class="related-species">${v.species}</div>
-            </div>
-          </a>`)
-        .join('');
+      renderDetail(currentVariety, varieties);
+      i18n.apply();
     });
+
+  document.addEventListener('langchange', () => {
+    if (currentVariety && cachedVarieties) renderDetail(currentVariety, cachedVarieties);
+    i18n.apply();
+  });
 </script>
 </body>
 </html>
