@@ -160,7 +160,7 @@ nav.scrolled .lang-sep { color: rgba(45,36,24,0.2); }
 
 /* Mobile lang toggle (inside drawer) */
 .mobile-lang-toggle {
-  display: flex; align-items: center; gap: 0.5rem;
+  align-items: center; gap: 0.5rem;
   margin-top: 2.5rem;
 }
 .mobile-lang-toggle .lang-btn {

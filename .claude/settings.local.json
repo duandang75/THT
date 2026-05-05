@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(python3 -m json.tool --no-ensure-ascii /Users/duandang/THT/varieties.json)",
-      "Bash(python3 -m json.tool --no-ensure-ascii /Users/duandang/THT/translations.json)"
+      "Bash(python3 -m json.tool --no-ensure-ascii /Users/duandang/THT/translations.json)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(len\\(d\\), 'varieties'\\); [print\\('-', v['name']\\) for v in d]\")"
     ]
   }
 }
