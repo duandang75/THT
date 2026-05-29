@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THT Admin</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      color: #2d2418;
+      background: #f4f1ed;
+      min-height: 100vh;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: #2d2418;
+      color: #f4f1ed;
+      height: 52px;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-title { font-size: 15px; font-weight: 600; letter-spacing: 0.02em; }
+    .topbar-sep   { opacity: 0.3; }
+    .topbar-sub   { font-size: 13px; opacity: 0.55; }
+    .topbar-new   { margin-left: auto; }
+
+    /* ── Page ── */
+    .page { max-width: 1160px; margin: 0 auto; padding: 2rem; display: flex; flex-direction: column; gap: 1.75rem; }
+
+    /* ── Card ── */
+    .card { background: #fff; border-radius: 10px; border: 1px solid #e4ddd5; padding: 1.75rem; }
+    .card-title {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: #a89a8a; margin-bottom: 1.5rem;
+    }
+
+    /* ── Editor layout ── */
+    .editor-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    /* ── Photo panel ── */
+    .photo-panel { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .drop-zone {
+      width: 260px; height: 260px;
+      border: 2px dashed #cfc7be;
+      border-radius: 8px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      position: relative;
+      overflow: hidden;
+      background: #faf8f5;
+      user-select: none;
+    }
+    .drop-zone:hover, .drop-zone.drag-over { border-color: #c17a5e; background: #fef8f4; }
+    .drop-zone img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .drop-hint { text-align: center; color: #a89a8a; font-size: 13px; line-height: 1.7; pointer-events: none; z-index: 1; }
+    .drop-hint svg { display: block; margin: 0 auto 0.6rem; }
+    #photo-input { display: none; }
+
+    /* ── Form panel ── */
+    .form-panel { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    /* ── Gen bar ── */
+    .gen-bar { display: flex; gap: 0.75rem; align-items: flex-end; flex-wrap: wrap; }
+
+    /* ── Fields ── */
+    .field { display: flex; flex-direction: column; gap: 0.35rem; }
+    .field label {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      color: #a89a8a;
+    }
+    input[type=text], select, textarea {
+      border: 1px solid #ddd5cc;
+      border-radius: 6px;
+      padding: 0.5rem 0.65rem;
+      font-size: 14px;
+      font-family: inherit;
+      color: #2d2418;
+      background: #fff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      width: 100%;
+    }
+    input[type=text]:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #c17a5e;
+      box-shadow: 0 0 0 3px rgba(193, 122, 94, 0.12);
+    }
+    textarea { resize: vertical; line-height: 1.65; }
+    textarea.short { min-height: 64px; }
+    textarea.long  { min-height: 108px; }
+
+    /* ── Field grids ── */
+    .f2 { display: grid; grid-template-columns: 1fr 1fr;          gap: 0.85rem; }
+    .f3 { display: grid; grid-template-columns: 1fr 1fr 1fr;      gap: 0.85rem; }
+
+    /* ── Form sections ── */
+    .fsection { display: flex; flex-direction: column; gap: 0.85rem; padding-top: 1.25rem; border-top: 1px solid #f0ebe4; }
+    .fsection-label {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.09em;
+      color: #c8bdb0;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 6px;
+      font-size: 13px; font-family: inherit; font-weight: 600;
+      cursor: pointer; border: 1px solid transparent;
+      transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+      white-space: nowrap; line-height: 1;
+    }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-primary { background: #2d2418; color: #f4f1ed; }
+    .btn-primary:not(:disabled):hover { background: #1a1510; }
+    .btn-accent  { background: #c17a5e; color: #fff; }
+    .btn-accent:not(:disabled):hover  { background: #a8634a; }
+    .btn-outline { background: transparent; color: #2d2418; border-color: #ddd5cc; }
+    .btn-outline:not(:disabled):hover { border-color: #2d2418; background: #faf8f5; }
+    .btn-danger  { background: transparent; color: #b83232; border-color: #eecfcf; }
+    .btn-danger:not(:disabled):hover  { background: #fdf3f3; }
+    .btn-sm  { padding: 0.35rem 0.7rem; font-size: 12px; }
+    .btn-full { width: 100%; }
+
+    /* ── Alerts ── */
+    .alert {
+      padding: 0.65rem 0.9rem; border-radius: 6px;
+      font-size: 13px; line-height: 1.5; display: none;
+    }
+    .alert.show { display: block; }
+    .alert-error   { background: #fdf2f2; color: #b83232; border: 1px solid #f2c4c4; }
+    .alert-success { background: #f2faf4; color: #266e3e; border: 1px solid #b8e0c8; }
+    .alert-info    { background: #f2f6fd; color: #1f4fa0; border: 1px solid #b8d0f0; }
+
+    /* ── Spinner ── */
+    .spin {
+      width: 13px; height: 13px;
+      border: 2px solid currentColor; border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.55s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Drafts table ── */
+    .drafts-empty { color: #a89a8a; font-size: 13px; padding: 1.5rem 0; text-align: center; }
+    .dtable { width: 100%; border-collapse: collapse; }
+    .dtable th {
+      text-align: left; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: #a89a8a; padding: 0 0.75rem 0.85rem;
+      border-bottom: 1px solid #f0e8e0;
+    }
+    .dtable td { padding: 0.85rem 0.75rem; border-bottom: 1px solid #f8f4f0; vertical-align: middle; }
+    .dtable tr:last-child td { border-bottom: none; }
+    .dtable tr:hover td { background: #fdf9f6; }
+    .d-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 5px; display: block; }
+    .d-code  { font-weight: 700; font-size: 13px; letter-spacing: 0.04em; }
+    .d-name  { font-size: 13px; color: #5a4a3a; }
+    .d-name-vi { font-size: 12px; color: #9a8a7a; margin-top: 2px; }
+    .d-actions { display: flex; gap: 0.5rem; }
+
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+
+<nav class="topbar">
+  <span class="topbar-title">THT Orchid Farm</span>
+  <span class="topbar-sep">·</span>
+  <span class="topbar-sub">Admin</span>
+  <button class="btn btn-outline btn-sm topbar-new" id="btn-new" hidden>+ New variety</button>
+</nav>
+
+<div class="page">
+
+  <!-- ══ EDITOR ══ -->
+  <div class="card" id="editor-card">
+    <div class="card-title" id="editor-title">Add New Variety</div>
+
+    <div class="editor-grid">
+
+      <!-- Photo column -->
+      <div class="photo-panel">
+        <div class="drop-zone" id="drop-zone">
+          <div class="drop-hint" id="drop-hint">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+                 stroke="#cfc7be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21,15 16,10 5,21"/>
+            </svg>
+            Drop photo here<br>or click to browse
+          </div>
+          <img id="photo-preview" hidden alt="Preview">
+        </div>
+        <input type="file" id="photo-input" accept="image/jpeg,image/png,image/webp,image/heic">
+        <button class="btn btn-outline btn-full" id="btn-browse">Browse photo…</button>
+      </div>
+
+      <!-- Form column -->
+      <div class="form-panel">
+
+        <!-- Code + Generate -->
+        <div class="gen-bar">
+          <div class="field" style="flex: 0 0 155px">
+            <label for="f-code">Species Code</label>
+            <input id="f-code" type="text" placeholder="e.g. THT042" autocomplete="off" spellcheck="false">
+          </div>
+          <button class="btn btn-accent" id="btn-generate">
+            <span id="gen-label">Generate with Claude</span>
+            <span id="gen-spin" class="spin" hidden></span>
+          </button>
+        </div>
+
+        <div id="alert-gen" class="alert"></div>
+
+        <!-- AI + specs fields -->
+        <div id="ai-fields" hidden>
+
+          <!-- Names -->
+          <div class="fsection">
+            <div class="fsection-label">Variety Name</div>
+            <div class="f2">
+              <div class="field">
+                <label for="f-name-en">English</label>
+                <input id="f-name-en" type="text" placeholder="THT042 – Sunrise Blush">
+              </div>
+              <div class="field">
+                <label for="f-name-vi">Vietnamese</label>
+                <input id="f-name-vi" type="text" placeholder="THT042 – Hồng Bình Minh">
+              </div>
+            </div>
+          </div>
+
+          <!-- Descriptions -->
+          <div class="fsection">
+            <div class="fsection-label">Descriptions</div>
+            <div class="f2">
+              <div class="field">
+                <label for="f-sdesc-en">Short — English</label>
+                <textarea id="f-sdesc-en" class="short" spellcheck="true"></textarea>
+              </div>
+              <div class="field">
+                <label for="f-sdesc-vi">Short — Vietnamese</label>
+                <textarea id="f-sdesc-vi" class="short" spellcheck="false"></textarea>
+              </div>
+            </div>
+            <div class="f2">
+              <div class="field">
+                <label for="f-ldesc-en">Long — English</label>
+                <textarea id="f-ldesc-en" class="long" spellcheck="true"></textarea>
+              </div>
+              <div class="field">
+                <label for="f-ldesc-vi">Long — Vietnamese</label>
+                <textarea id="f-ldesc-vi" class="long" spellcheck="false"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Specs -->
+          <div class="fsection">
+            <div class="fsection-label">Specifications</div>
+            <div class="f3">
+              <div class="field">
+                <label for="f-pot">Pot Size</label>
+                <input id="f-pot" type="text" value='5"'>
+              </div>
+              <div class="field">
+                <label for="f-bloom">Bloom Duration</label>
+                <input id="f-bloom" type="text" value="3–4 months">
+              </div>
+              <div class="field">
+                <label for="f-fill">Fill / Colour</label>
+                <select id="f-fill">
+                  <option value="fill-blush">Blush · pink</option>
+                  <option value="fill-white">White</option>
+                  <option value="fill-purple">Purple</option>
+                  <option value="fill-yellow">Yellow</option>
+                  <option value="fill-striped">Striped</option>
+                </select>
+              </div>
+            </div>
+            <div class="f2">
+              <div class="field">
+                <label for="f-badge-en">Badge — English <span style="font-weight:400;text-transform:none">(optional)</span></label>
+                <input id="f-badge-en" type="text" placeholder="e.g. New · Limited">
+              </div>
+              <div class="field">
+                <label for="f-badge-vi">Badge — Vietnamese <span style="font-weight:400;text-transform:none">(optional)</span></label>
+                <input id="f-badge-vi" type="text" placeholder="e.g. Mới · Giới hạn">
+              </div>
+            </div>
+          </div>
+
+          <!-- Save -->
+          <div class="fsection" style="border-top:none; padding-top:0.5rem">
+            <div id="alert-save" class="alert"></div>
+            <button class="btn btn-primary" id="btn-save">Save Draft</button>
+          </div>
+
+        </div><!-- /ai-fields -->
+      </div><!-- /form-panel -->
+    </div><!-- /editor-grid -->
+  </div><!-- /card -->
+
+
+  <!-- ══ DRAFTS ══ -->
+  <div class="card">
+    <div class="card-title">Drafts</div>
+    <div id="drafts-container">
+      <div class="drafts-empty">No drafts yet.</div>
+    </div>
+  </div>
+
+  <!-- ══ PUBLISHED ══ -->
+  <div class="card">
+    <div class="card-title">Published Varieties</div>
+    <div id="published-container">
+      <div class="drafts-empty">Loading…</div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+  // ── State ──────────────────────────────────────────────────────────────────
+  let selectedFile = null;
+  let editingCode  = null;
+
+  // ── Refs ───────────────────────────────────────────────────────────────────
+  const $  = id => document.getElementById(id);
+  const dropZone    = $('drop-zone');
+  const dropHint    = $('drop-hint');
+  const photoInput  = $('photo-input');
+  const photoPreview= $('photo-preview');
+  const codeInput   = $('f-code');
+  const aiFields    = $('ai-fields');
+  const alertGen    = $('alert-gen');
+  const alertSave   = $('alert-save');
+  const btnGenerate = $('btn-generate');
+  const genLabel    = $('gen-label');
+  const genSpin     = $('gen-spin');
+  const btnSave     = $('btn-save');
+  const editorTitle = $('editor-title');
+  const btnNew      = $('btn-new');
+
+  // ── Photo drop zone ────────────────────────────────────────────────────────
+  $('btn-browse').addEventListener('click', () => photoInput.click());
+  dropZone.addEventListener('click',  () => photoInput.click());
+
+  photoInput.addEventListener('change', e => {
+    if (e.target.files[0]) applyPhoto(e.target.files[0]);
+  });
+
+  dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const f = e.dataTransfer.files[0];
+    if (f && f.type.startsWith('image/')) applyPhoto(f);
+  });
+
+  function applyPhoto(file) {
+    selectedFile = file;
+    showPhotoPreview(URL.createObjectURL(file));
+  }
+
+  function showPhotoPreview(url) {
+    photoPreview.src = url;
+    photoPreview.hidden = false;
+    dropHint.hidden = true;
+  }
+
+  // ── Alerts ─────────────────────────────────────────────────────────────────
+  function alert(el, type, msg) {
+    el.className = `alert alert-${type} show`;
+    el.textContent = msg;
+  }
+  function clearAlert(el) { el.classList.remove('show'); }
+
+  // ── Generate ───────────────────────────────────────────────────────────────
+  btnGenerate.addEventListener('click', async () => {
+    const code = codeInput.value.trim().toUpperCase();
+    if (!code)         return alert(alertGen, 'error', 'Enter a species code first.');
+    if (!selectedFile) return alert(alertGen, 'error', 'Select a photo first.');
+
+    clearAlert(alertGen);
+    setGenerating(true);
+
+    const form = new FormData();
+    form.append('code', code);
+    form.append('image', selectedFile);
+
+    try {
+      const res  = await fetch('/api/generate', { method: 'POST', body: form });
+      const data = await res.json();
+      if (!res.ok) return alert(alertGen, 'error', data.error || 'Generation failed.');
+      populateForm(data);
+      aiFields.hidden = false;
+      editingCode = code;
+      btnNew.hidden = false;
+    } catch (err) {
+      alert(alertGen, 'error', `Network error: ${err.message}`);
+    } finally {
+      setGenerating(false);
+    }
+  });
+
+  function setGenerating(on) {
+    btnGenerate.disabled = on;
+    genLabel.textContent = on ? 'Generating…' : 'Generate with Claude';
+    genSpin.hidden = !on;
+  }
+
+  function populateForm(data) {
+    const code = (data.code || codeInput.value.trim()).toUpperCase();
+    $('f-name-en').value  = data.suggested_name_en ? `${code} – ${data.suggested_name_en}` : '';
+    $('f-name-vi').value  = data.suggested_name_vi ? `${code} – ${data.suggested_name_vi}` : '';
+    $('f-sdesc-en').value = data.shortDesc    || '';
+    $('f-ldesc-en').value = data.longDesc     || '';
+    $('f-sdesc-vi').value = data.shortDesc_vi || '';
+    $('f-ldesc-vi').value = data.longDesc_vi  || '';
+    if (data.fill) $('f-fill').value = data.fill;
+  }
+
+  // ── Save draft ─────────────────────────────────────────────────────────────
+  btnSave.addEventListener('click', async () => {
+    const code = (editingCode || codeInput.value.trim()).toUpperCase();
+    if (!code) return alert(alertSave, 'error', 'No species code set.');
+
+    clearAlert(alertSave);
+    btnSave.disabled = true;
+    btnSave.textContent = 'Saving…';
+
+    const badgeEn = $('f-badge-en').value.trim() || null;
+    const payload = {
+      id:          code,
+      name:        $('f-name-en').value.trim(),
+      name_vi:     $('f-name-vi').value.trim(),
+      shortDesc:   $('f-sdesc-en').value.trim(),
+      longDesc:    $('f-ldesc-en').value.trim(),
+      shortDesc_vi:$('f-sdesc-vi').value.trim(),
+      longDesc_vi: $('f-ldesc-vi').value.trim(),
+      pot:         $('f-pot').value.trim()   || '5"',
+      bloom:       $('f-bloom').value.trim() || '3–4 months',
+      fill:        $('f-fill').value,
+      badge:       badgeEn,
+      badge_vi:    badgeEn ? ($('f-badge-vi').value.trim() || null) : null,
+    };
+
+    try {
+      const res  = await fetch('/api/save-draft', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) return alert(alertSave, 'error', data.error || 'Save failed.');
+      alert(alertSave, 'success', `Draft saved for ${code}.`);
+      loadDrafts();
+    } catch (err) {
+      alert(alertSave, 'error', `Network error: ${err.message}`);
+    } finally {
+      btnSave.disabled = false;
+      btnSave.textContent = 'Save Draft';
+    }
+  });
+
+  // ── Drafts ─────────────────────────────────────────────────────────────────
+  async function loadDrafts() {
+    try {
+      const res    = await fetch('/api/drafts');
+      const drafts = await res.json();
+      renderDrafts(drafts);
+    } catch {}
+  }
+
+  function renderDrafts(drafts) {
+    const el = $('drafts-container');
+    if (!drafts.length) {
+      el.innerHTML = '<div class="drafts-empty">No drafts yet.</div>';
+      return;
+    }
+    el.innerHTML = `
+      <table class="dtable">
+        <thead><tr>
+          <th></th>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Pot</th>
+          <th></th>
+        </tr></thead>
+        <tbody>
+          ${drafts.map(d => `
+            <tr>
+              <td><img class="d-thumb" src="/drafts/${d.id}/photo.jpg?t=${Date.now()}" alt="${d.id}"></td>
+              <td><span class="d-code">${d.id}</span></td>
+              <td>
+                <div class="d-name">${d.name || '—'}</div>
+                <div class="d-name-vi">${d.name_vi || ''}</div>
+              </td>
+              <td>${d.pot || '—'}</td>
+              <td>
+                <div class="d-actions">
+                  <button class="btn btn-outline btn-sm"
+                    onclick='editDraft(${JSON.stringify(d)})'>Edit</button>
+                  <button class="btn btn-accent btn-sm"
+                    onclick="publishDraft('${d.id}', this)">Publish</button>
+                  <button class="btn btn-danger btn-sm"
+                    onclick="deleteDraft('${d.id}', this)">Delete</button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  function editDraft(d) {
+    editingCode = d.id;
+    codeInput.value = d.id;
+    editorTitle.textContent = `Editing ${d.id}`;
+    btnNew.hidden = false;
+
+    showPhotoPreview(`/drafts/${d.id}/photo.jpg?t=${Date.now()}`);
+    selectedFile = null;
+
+    $('f-name-en').value   = d.name        || '';
+    $('f-name-vi').value   = d.name_vi     || '';
+    $('f-sdesc-en').value  = d.shortDesc   || '';
+    $('f-ldesc-en').value  = d.longDesc    || '';
+    $('f-sdesc-vi').value  = d.shortDesc_vi|| '';
+    $('f-ldesc-vi').value  = d.longDesc_vi || '';
+    $('f-pot').value       = d.pot         || '5"';
+    $('f-bloom').value     = d.bloom       || '3–4 months';
+    $('f-fill').value      = d.fill        || 'fill-blush';
+    $('f-badge-en').value  = d.badge       || '';
+    $('f-badge-vi').value  = d.badge_vi    || '';
+
+    aiFields.hidden = false;
+    clearAlert(alertGen);
+    clearAlert(alertSave);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function publishDraft(code, btn) {
+    if (!confirm(`Publish ${code} to the live site?\n\nThis will commit and push to the master branch.`)) return;
+    btn.disabled = true;
+    btn.textContent = 'Publishing…';
+    try {
+      const res  = await fetch(`/api/publish/${code}`, { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) {
+        window.alert(`Publish failed:\n\n${data.error}`);
+        btn.disabled = false;
+        btn.textContent = 'Publish';
+      } else {
+        if (editingCode === code) resetForm();
+        loadDrafts();
+      }
+    } catch (err) {
+      window.alert(`Network error: ${err.message}`);
+      btn.disabled = false;
+      btn.textContent = 'Publish';
+    }
+  }
+
+  async function deleteDraft(code, btn) {
+    if (!confirm(`Delete the draft for ${code}?`)) return;
+    btn.disabled = true;
+    try {
+      await fetch(`/api/drafts/${code}`, { method: 'DELETE' });
+      if (editingCode === code) resetForm();
+      loadDrafts();
+    } catch {}
+  }
+
+  // ── Reset / new ────────────────────────────────────────────────────────────
+  function resetForm() {
+    editingCode   = null;
+    selectedFile  = null;
+    codeInput.value = '';
+    editorTitle.textContent = 'Add New Variety';
+    photoPreview.hidden = true;
+    photoPreview.src    = '';
+    dropHint.hidden     = false;
+    photoInput.value    = '';
+    aiFields.hidden     = true;
+    btnNew.hidden       = true;
+    clearAlert(alertGen);
+    clearAlert(alertSave);
+    // Reset spec defaults
+    $('f-pot').value   = '5"';
+    $('f-bloom').value = '3–4 months';
+    $('f-fill').value  = 'fill-blush';
+    $('f-badge-en').value = '';
+    $('f-badge-vi').value = '';
+  }
+
+  btnNew.addEventListener('click', resetForm);
+
+  // ── Published varieties ────────────────────────────────────────────────────
+  async function loadPublished() {
+    const el = $('published-container');
+    try {
+      const res      = await fetch('/varieties.json');
+      const varieties = await res.json();
+      if (!varieties.length) {
+        el.innerHTML = '<div class="drafts-empty">No published varieties.</div>';
+        return;
+      }
+      el.innerHTML = `
+        <table class="dtable">
+          <thead><tr>
+            <th></th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Pot</th>
+            <th></th>
+          </tr></thead>
+          <tbody>
+            ${varieties.map(v => `
+              <tr>
+                <td>${v.image
+                  ? `<img class="d-thumb" src="${v.image}" alt="${v.id}">`
+                  : `<div class="d-thumb" style="border-radius:5px;background:#f0ebe4"></div>`
+                }</td>
+                <td><span class="d-code">${v.id}</span></td>
+                <td>
+                  <div class="d-name">${v.name || '—'}</div>
+                  <div class="d-name-vi">${v.name_vi || ''}</div>
+                </td>
+                <td>${v.pot || '—'}</td>
+                <td>
+                  <div class="d-actions">
+                    <button class="btn btn-danger btn-sm"
+                      onclick="removeVariety('${v.id}', this)">Remove</button>
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>`;
+    } catch (err) {
+      el.innerHTML = `<div class="drafts-empty" style="color:#b83232">Failed to load: ${err.message}</div>`;
+    }
+  }
+
+  async function removeVariety(code, btn) {
+    if (!confirm(`Remove ${code} from the live site?\n\nThis will delete it from varieties.json, translations.json, and the image — then push to master.`)) return;
+    btn.disabled = true;
+    btn.textContent = 'Removing…';
+    try {
+      const res  = await fetch(`/api/remove/${code}`, { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) {
+        window.alert(`Remove failed:\n\n${data.error}`);
+        btn.disabled = false;
+        btn.textContent = 'Remove';
+      } else {
+        loadPublished();
+      }
+    } catch (err) {
+      window.alert(`Network error: ${err.message}`);
+      btn.disabled = false;
+      btn.textContent = 'Remove';
+    }
+  }
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+  loadDrafts();
+  loadPublished();
+</script>
+</body>
+</html>
