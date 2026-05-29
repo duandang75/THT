@@ -10,12 +10,20 @@ Static marketing website for **THT Orchid Farm** — a family-owned phalaenopsis
 
 The pages fetch `varieties.json` via `fetch()`, so they must be served over HTTP — opening `index.html` directly as a `file://` URL will not work.
 
+**With the admin server** (required for variety management):
+
 ```bash
-python3 -m http.server 8000
-# Then visit http://localhost:8000
+pip install flask anthropic
+ANTHROPIC_API_KEY=sk-... python3 server.py
+# Site:   http://localhost:8000/
+# Admin:  http://localhost:8000/admin.html
 ```
 
-No installation, no compilation.
+**Without admin features** (static files only):
+
+```bash
+python3 -m http.server 8000
+```
 
 ## File Structure
 
@@ -29,6 +37,8 @@ No installation, no compilation.
 | [i18n.js](i18n.js) | Internationalization module — loads `translations.json`, swaps `data-i18n` attributes |
 | [translations.json](translations.json) | EN and VI string maps |
 | [varieties.json](varieties.json) | All variety data — fetched at runtime by every page |
+| [server.py](server.py) | Local dev + admin Flask server — serves static files, exposes `/api/*` endpoints for variety management, calls Claude API for AI-generated descriptions |
+| [admin.html](admin.html) | Browser UI for adding/publishing/removing varieties (requires `server.py`) |
 
 **Images**: `images/Queen.jpg` (hero), `images/Farm.jpg` (about section), plus one JPG per variety (e.g. `images/THT001.jpg`).
 
@@ -50,9 +60,9 @@ No installation, no compilation.
 
 ## Adding a New Variety
 
-Add an entry to [varieties.json](varieties.json). Every page fetches it at runtime and renders cards dynamically — no HTML changes needed. Set `"image"` to a path like `"images/MyOrchid.jpg"` or `null` to fall back to the CSS gradient defined by `"fill"`. Add the corresponding image to the `images/` directory.
+**Via the admin UI** (preferred): run `server.py`, open `http://localhost:8000/admin.html`, upload a photo and fill in the code — Claude generates name/description copy, you review and publish. Publishing commits directly to `master` and triggers a Netlify deploy.
 
-When adding a variety with i18n copy (name, description), also add the matching keys to both `"en"` and `"vi"` blocks in [translations.json](translations.json).
+**Manually**: add an entry to [varieties.json](varieties.json) and the matching keys to both `"en"` and `"vi"` blocks in [translations.json](translations.json). Set `"image"` to `"images/MyOrchid.jpg"` or `null` to fall back to the CSS gradient defined by `"fill"`. Add the image to the `images/` directory. No HTML changes needed — every page fetches `varieties.json` at runtime.
 
 ## Deployment
 
