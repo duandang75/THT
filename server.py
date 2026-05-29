@@ -175,6 +175,30 @@ def api_save_draft():
     return jsonify({"ok": True})
 
 
+# ── API: fork published variety to draft ─────────────────────────────────────
+
+@app.route("/api/fork/<code>", methods=["POST"])
+def api_fork(code):
+    code = code.upper()
+    with open(VARIETIES_JSON, encoding="utf-8") as f:
+        varieties = json.load(f)
+    entry = next((v for v in varieties if v["id"] == code), None)
+    if not entry:
+        return jsonify({"error": f"{code} not found in varieties.json"}), 404
+
+    draft_dir = DRAFTS_DIR / code
+    draft_dir.mkdir(exist_ok=True)
+
+    img_src = IMAGES_DIR / f"{code}.jpg"
+    if img_src.exists():
+        shutil.copy2(img_src, draft_dir / "photo.jpg")
+
+    with open(draft_dir / "data.json", "w", encoding="utf-8") as f:
+        json.dump(entry, f, indent=2, ensure_ascii=False)
+
+    return jsonify(entry)
+
+
 # ── API: list drafts ──────────────────────────────────────────────────────────
 
 @app.route("/api/drafts", methods=["GET"])
