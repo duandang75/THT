@@ -1,5 +1,25 @@
 [
   {
+    "id": "MF411",
+    "name": "MF411 – Golden Sunset",
+    "name_vi": "MF411 – Hoàng Hôn Vàng",
+    "shortDesc": "Warm golden-yellow petals blush into rose-pink toward a vivid magenta and amber-speckled lip. Ships in a 3.6\" pot.",
+    "longDesc": "Broad, rounded petals glow in soft buttery yellow that deepens to a rosy pink near the throat. The central lip blazes magenta with a finely freckled golden-orange column, lending striking contrast. A free-flowering variety that holds its blooms in graceful, well-spaced arcs along an arching spike, performing reliably indoors with bright, indirect light.",
+    "shortDesc_vi": "Cánh hoa vàng ấm chuyển dần sang hồng phấn, ôm lấy môi hoa màu hồng đậm điểm đốm hổ phách. Giao trong chậu 3.6\".",
+    "longDesc_vi": "Những cánh hoa tròn rộng tỏa sắc vàng bơ dịu nhẹ, đậm dần thành hồng phấn về phía họng hoa. Môi hoa trung tâm rực màu hồng magenta cùng trụ nhụy vàng cam điểm đốm tinh tế, tạo nên sự tương phản nổi bật. Đây là giống hoa sai bông, giữ hoa đều đặn dọc theo cành cong duyên dáng, sinh trưởng ổn định trong nhà với ánh sáng gián tiếp dồi dào.",
+    "pot": "3.6\"",
+    "bloom": "3–4 months",
+    "fill": "fill-yellow",
+    "badge": null,
+    "badge_vi": null,
+    "image": "images/MF411.jpg",
+    "species": "Phalaenopsis hybrid",
+    "light": "Bright indirect",
+    "care": "Beginner-friendly",
+    "watering": "Every 7–10 days",
+    "temperature": "18–28 °C"
+  },
+  {
     "id": "THT999",
     "name": "THT999 – Pink Cascade",
     "name_vi": "THT999 – Thác Hồng",
