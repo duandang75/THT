@@ -55,8 +55,10 @@
 <!-- ── Detail hero (populated by JS) ── -->
 <div class="detail-hero" id="detailHero">
   <div class="detail-swatch" id="detailSwatch">
-    <div class="card-image-fill" id="detailFill"></div>
-    <span class="card-badge" id="detailBadge"></span>
+    <div class="swatch-main" id="swatchMain">
+      <span class="card-badge" id="detailBadge"></span>
+    </div>
+    <div class="swatch-thumbs" id="swatchThumbs" hidden></div>
   </div>
   <div class="detail-info">
     <a href="varieties.html" class="detail-back" data-i18n="detail.back">← All varieties</a>
@@ -99,6 +101,48 @@
     return v.image
       ? `<img src="${v.image}" alt="${v.name}" style="width:100%;height:100%;object-fit:cover;display:block">`
       : `<div class="card-image-fill ${v.fill}"></div>`;
+  }
+
+  function getPhotos(v) {
+    if (v.images && v.images.length) return v.images;
+    return v.image ? [v.image] : [];
+  }
+
+  function setMainPhoto(src, alt, fill) {
+    const main = document.getElementById('swatchMain');
+    main.querySelectorAll('img, .card-image-fill').forEach(el => el.remove());
+    if (src) {
+      const img = document.createElement('img');
+      img.src = src; img.alt = alt;
+      Object.assign(img.style, { position:'absolute', inset:'0', width:'100%', height:'100%', objectFit:'cover', display:'block' });
+      main.insertBefore(img, main.firstChild);
+    } else {
+      const div = document.createElement('div');
+      div.className = `card-image-fill ${fill}`;
+      main.insertBefore(div, main.firstChild);
+    }
+  }
+
+  function renderGallery(v) {
+    const photos = getPhotos(v);
+    const thumbsEl = document.getElementById('swatchThumbs');
+    setMainPhoto(photos[0], v.name, v.fill);
+    if (photos.length > 1) {
+      thumbsEl.hidden = false;
+      thumbsEl.innerHTML = photos.map((src, i) => `
+        <button class="swatch-thumb${i === 0 ? ' active' : ''}" type="button" data-src="${src}">
+          <img src="${src}" alt="Photo ${i + 1}">
+        </button>`).join('');
+      thumbsEl.querySelectorAll('.swatch-thumb').forEach(btn => {
+        btn.addEventListener('click', () => {
+          setMainPhoto(btn.dataset.src, v.name, v.fill);
+          thumbsEl.querySelectorAll('.swatch-thumb').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+    } else {
+      thumbsEl.hidden = true;
+    }
   }
 
   function renderDetail(variety, varieties) {
@@ -158,10 +202,7 @@
         return;
       }
 
-      document.getElementById('detailFill').replaceWith(
-        Object.assign(document.createElement('div'), { innerHTML: swatchHTML(currentVariety) }).firstChild
-      );
-
+      renderGallery(currentVariety);
       renderDetail(currentVariety, varieties);
       i18n.apply();
     });

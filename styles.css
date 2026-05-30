@@ -508,9 +508,27 @@ body.menu-open { overflow: hidden; }
   display: grid; grid-template-columns: 1fr 1fr;
   min-height: 80vh; padding-top: 72px;
 }
-.detail-swatch { position: relative; min-height: 500px; }
+.detail-swatch { display: flex; flex-direction: column; }
+.swatch-main { position: relative; flex: 1; min-height: 500px; overflow: hidden; }
 .detail-swatch .card-image-fill { position: absolute; inset: 0; }
 .detail-swatch .card-badge { position: absolute; top: 2rem; left: 2rem; font-size: 0.75rem; padding: 0.4rem 1rem; }
+
+.swatch-thumbs {
+  display: flex; gap: 0.5rem; flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  background: rgba(45,36,24,0.04);
+  border-top: 1px solid rgba(45,36,24,0.08);
+}
+.swatch-thumb {
+  width: 72px; height: 72px; padding: 0;
+  border: 2px solid transparent; border-radius: 3px;
+  overflow: hidden; cursor: pointer; flex-shrink: 0;
+  background: none; opacity: 0.55;
+  transition: border-color 0.15s, opacity 0.15s;
+}
+.swatch-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.swatch-thumb:hover { opacity: 0.82; }
+.swatch-thumb.active { border-color: var(--rose); opacity: 1; }
 
 .detail-info {
   display: flex; flex-direction: column; justify-content: center;
@@ -558,7 +576,7 @@ body.menu-open { overflow: hidden; }
 
 @media (max-width: 900px) {
   .detail-hero { grid-template-columns: 1fr; min-height: auto; }
-  .detail-swatch { min-height: 300px; }
+  .swatch-main { min-height: 300px; }
   .detail-info { padding: 3rem 2rem; }
   .detail-related { padding: 4rem 2rem; }
   .related-grid { grid-template-columns: 1fr 1fr; }
