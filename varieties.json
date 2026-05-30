@@ -1,5 +1,25 @@
 [
   {
+    "id": "MF364",
+    "name": "MF364 – Blushing Cascade",
+    "name_vi": "MF364 – Thác Hồng Phấn",
+    "shortDesc": "Soft blush-pink petals deepen toward a rosy magenta lip with golden-orange center. A graceful arching spray. 3.6\" pot.",
+    "longDesc": "Delicate blush-pink blooms cascade along a single elegant arching stem, each petal washed in tender rose. The flowers reveal a vivid magenta lip touched with golden-orange at the throat, creating a refined contrast. Full, rounded petals give every bloom a soft luminous quality. A dependable bloomer that produces long, generous flower sprays.",
+    "shortDesc_vi": "Cánh hoa hồng phấn dịu chuyển sang môi hồng magenta với tâm vàng cam. Chùm hoa cong duyên dáng. Chậu 3.6\".",
+    "longDesc_vi": "Những bông hoa hồng phấn nhẹ nhàng buông xuống dọc theo một cành cong thanh lịch, mỗi cánh hoa nhuốm sắc hồng dịu dàng. Hoa khoe môi hồng magenta rực rỡ điểm vàng cam nơi cổ họng, tạo nên sự tương phản tinh tế. Cánh hoa đầy đặn, tròn trịa mang lại vẻ rạng rỡ mềm mại cho từng bông. Giống cây nở bền, cho ra những chùm hoa dài và sai hoa.",
+    "pot": "3.6\"",
+    "bloom": "3–4 months",
+    "fill": "fill-blush",
+    "badge": null,
+    "badge_vi": null,
+    "image": "images/MF364.jpg",
+    "species": "Phalaenopsis hybrid",
+    "light": "Bright indirect",
+    "care": "Beginner-friendly",
+    "watering": "Every 7–10 days",
+    "temperature": "18–28 °C"
+  },
+  {
     "id": "MF411",
     "name": "MF411 – Golden Sunset",
     "name_vi": "MF411 – Hoàng Hôn Vàng",

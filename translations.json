@@ -83,7 +83,9 @@
     "detail.related.title": "You might also",
     "detail.related.title.em": "like",
     "variety.MF411.name": "MF411 – Golden Sunset",
-    "variety.MF411.shortDesc": "Warm golden-yellow petals blush into rose-pink toward a vivid magenta and amber-speckled lip. Ships in a 3.6\" pot."
+    "variety.MF411.shortDesc": "Warm golden-yellow petals blush into rose-pink toward a vivid magenta and amber-speckled lip. Ships in a 3.6\" pot.",
+    "variety.MF364.name": "MF364 – Blushing Cascade",
+    "variety.MF364.shortDesc": "Soft blush-pink petals deepen toward a rosy magenta lip with golden-orange center. A graceful arching spray. 3.6\" pot."
   },
   "vi": {
     "nav.varieties": "Giống hoa",
@@ -169,6 +171,8 @@
     "detail.related.title": "Có thể bạn cũng",
     "detail.related.title.em": "thích",
     "variety.MF411.name": "MF411 – Hoàng Hôn Vàng",
-    "variety.MF411.shortDesc": "Cánh hoa vàng ấm chuyển dần sang hồng phấn, ôm lấy môi hoa màu hồng đậm điểm đốm hổ phách. Giao trong chậu 3.6\"."
+    "variety.MF411.shortDesc": "Cánh hoa vàng ấm chuyển dần sang hồng phấn, ôm lấy môi hoa màu hồng đậm điểm đốm hổ phách. Giao trong chậu 3.6\".",
+    "variety.MF364.name": "MF364 – Thác Hồng Phấn",
+    "variety.MF364.shortDesc": "Cánh hoa hồng phấn dịu chuyển sang môi hồng magenta với tâm vàng cam. Chùm hoa cong duyên dáng. Chậu 3.6\"."
   }
 }
