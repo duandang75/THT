@@ -179,6 +179,36 @@
     .d-name-vi { font-size: 12px; color: #9a8a7a; margin-top: 2px; }
     .d-actions { display: flex; gap: 0.5rem; }
 
+    /* ── Extra photo slots ── */
+    .extra-photos { display: flex; gap: 0.75rem; }
+    .extra-slot { width: 110px; height: 110px; flex-shrink: 0; }
+    .extra-add {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 0.3rem; width: 100%; height: 100%; cursor: pointer;
+      border: 2px dashed #cfc7be; border-radius: 6px;
+      background: #faf8f5; color: #a89a8a; font-size: 11px; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .extra-add:hover { border-color: #c17a5e; background: #fef8f4; }
+    .extra-add input[type=file] { display: none; }
+    .extra-thumb { position: relative; width: 100%; height: 100%; }
+    .extra-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; display: block; }
+    .extra-thumb-remove {
+      position: absolute; top: 4px; right: 4px;
+      background: rgba(45,36,24,0.65); color: #fff; border: none;
+      border-radius: 3px; width: 22px; height: 22px; padding: 0;
+      font-size: 13px; cursor: pointer; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .extra-thumb-remove:hover { background: #b83232; }
+    .extra-uploading {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; height: 100%; border-radius: 6px; background: #faf8f5;
+      border: 2px dashed #cfc7be;
+    }
+
     [hidden] { display: none !important; }
   </style>
 </head>
@@ -309,6 +339,15 @@
                 <label for="f-badge-vi">Badge — Vietnamese <span style="font-weight:400;text-transform:none">(optional)</span></label>
                 <input id="f-badge-vi" type="text" placeholder="e.g. Mới · Giới hạn">
               </div>
+            </div>
+          </div>
+
+          <!-- Additional Photos -->
+          <div class="fsection">
+            <div class="fsection-label">Additional Photos <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional — up to 2 more)</span></div>
+            <div class="extra-photos">
+              <div class="extra-slot" id="extra-b"></div>
+              <div class="extra-slot" id="extra-c"></div>
             </div>
           </div>
 
@@ -559,6 +598,7 @@
     $('f-badge-vi').value  = d.badge_vi    || '';
 
     aiFields.hidden = false;
+    loadExtraPhotos(d.id);
     clearAlert(alertGen);
     clearAlert(alertSave);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -597,6 +637,68 @@
     } catch {}
   }
 
+  // ── Extra photos ───────────────────────────────────────────────────────────
+  async function loadExtraPhotos(code) {
+    try {
+      const res  = await fetch(`/api/drafts/${code}/photos`);
+      const data = await res.json();
+      renderExtraSlot('b', code, data.b);
+      renderExtraSlot('c', code, data.c);
+    } catch {}
+  }
+
+  function renderExtraSlot(slot, code, hasPhoto) {
+    const el = $(`extra-${slot}`);
+    if (!el) return;
+    if (!code) { el.innerHTML = ''; return; }
+    if (hasPhoto) {
+      el.innerHTML = `
+        <div class="extra-thumb">
+          <img src="/drafts/${code}/photo_${slot}.jpg?t=${Date.now()}" alt="Photo ${slot.toUpperCase()}">
+          <button class="extra-thumb-remove" type="button"
+            onclick="removeExtraPhoto('${slot}','${code}',this)" title="Remove">✕</button>
+        </div>`;
+    } else {
+      el.innerHTML = `
+        <label class="extra-add" title="Add photo ${slot.toUpperCase()}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21,15 16,10 5,21"/>
+          </svg>
+          Photo ${slot.toUpperCase()}
+          <input type="file" accept="image/jpeg,image/png,image/webp,image/heic"
+            onchange="uploadExtraPhoto('${slot}','${code}',this)">
+        </label>`;
+    }
+  }
+
+  async function uploadExtraPhoto(slot, code, input) {
+    const file = input.files[0];
+    if (!file) return;
+    $(`extra-${slot}`).innerHTML = '<div class="extra-uploading"><span class="spin" style="color:#a89a8a"></span></div>';
+    const form = new FormData();
+    form.append('image', file);
+    try {
+      const res  = await fetch(`/api/drafts/${code}/photo/${slot}`, { method: 'POST', body: form });
+      const data = await res.json();
+      if (!res.ok) { window.alert(`Upload failed: ${data.error}`); renderExtraSlot(slot, code, false); }
+      else renderExtraSlot(slot, code, true);
+    } catch (err) {
+      window.alert(`Network error: ${err.message}`);
+      renderExtraSlot(slot, code, false);
+    }
+  }
+
+  async function removeExtraPhoto(slot, code, btn) {
+    btn.disabled = true;
+    try {
+      await fetch(`/api/drafts/${code}/photo/${slot}`, { method: 'DELETE' });
+      renderExtraSlot(slot, code, false);
+    } catch {}
+  }
+
   // ── Reset / new ────────────────────────────────────────────────────────────
   function resetForm() {
     editingCode   = null;
@@ -617,6 +719,8 @@
     $('f-fill').value  = 'fill-blush';
     $('f-badge-en').value = '';
     $('f-badge-vi').value = '';
+    renderExtraSlot('b', null, false);
+    renderExtraSlot('c', null, false);
   }
 
   btnNew.addEventListener('click', resetForm);

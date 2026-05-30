@@ -45,6 +45,15 @@ def draft_photo(code):
         abort(404)
     return send_from_directory(DRAFTS_DIR / code.upper(), "photo.jpg")
 
+@app.route("/drafts/<code>/photo_<slot>.jpg")
+def draft_extra_photo(code, slot):
+    if slot not in ("b", "c"):
+        abort(404)
+    photo = DRAFTS_DIR / code.upper() / f"photo_{slot}.jpg"
+    if not photo.exists():
+        abort(404)
+    return send_from_directory(DRAFTS_DIR / code.upper(), f"photo_{slot}.jpg")
+
 @app.route("/<path:path>")
 def static_serve(path):
     return send_from_directory(REPO, path)
@@ -193,10 +202,69 @@ def api_fork(code):
     if img_src.exists():
         shutil.copy2(img_src, draft_dir / "photo.jpg")
 
+    for slot in ("b", "c"):
+        extra_src = IMAGES_DIR / f"{code}{slot}.jpg"
+        if extra_src.exists():
+            shutil.copy2(extra_src, draft_dir / f"photo_{slot}.jpg")
+
     with open(draft_dir / "data.json", "w", encoding="utf-8") as f:
         json.dump(entry, f, indent=2, ensure_ascii=False)
 
     return jsonify(entry)
+
+
+# ── API: extra photos for a draft ────────────────────────────────────────────
+
+@app.route("/api/drafts/<code>/photos", methods=["GET"])
+def api_draft_photos(code):
+    draft_dir = DRAFTS_DIR / code.upper()
+    return jsonify({
+        "b": (draft_dir / "photo_b.jpg").exists(),
+        "c": (draft_dir / "photo_c.jpg").exists(),
+    })
+
+@app.route("/api/drafts/<code>/photo/<slot>", methods=["POST"])
+def api_draft_upload_extra(code, slot):
+    code = code.upper()
+    slot = slot.lower()
+    if slot not in ("b", "c"):
+        return jsonify({"error": "slot must be b or c"}), 400
+
+    draft_dir = DRAFTS_DIR / code
+    if not (draft_dir / "photo.jpg").exists():
+        return jsonify({"error": f"No primary photo for {code}. Save a draft first."}), 400
+
+    image_file = request.files.get("image")
+    if not image_file:
+        return jsonify({"error": "image file is required."}), 400
+
+    suffix = Path(image_file.filename).suffix.lower() or ".jpg"
+    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+        tmp_path = Path(tmp.name)
+        image_file.save(tmp_path)
+
+    photo_path = draft_dir / f"photo_{slot}.jpg"
+    try:
+        result = subprocess.run(
+            ["sips", "-Z", "1200", "--setProperty", "formatOptions", "85",
+             str(tmp_path), "--out", str(photo_path)],
+            capture_output=True
+        )
+        if result.returncode != 0:
+            return jsonify({"error": f"Image resize failed: {result.stderr.decode()}"}), 500
+    finally:
+        tmp_path.unlink(missing_ok=True)
+
+    return jsonify({"ok": True, "slot": slot})
+
+@app.route("/api/drafts/<code>/photo/<slot>", methods=["DELETE"])
+def api_draft_remove_extra(code, slot):
+    code = code.upper()
+    slot = slot.lower()
+    if slot not in ("b", "c"):
+        return jsonify({"error": "slot must be b or c"}), 400
+    (DRAFTS_DIR / code / f"photo_{slot}.jpg").unlink(missing_ok=True)
+    return jsonify({"ok": True})
 
 
 # ── API: list drafts ──────────────────────────────────────────────────────────
@@ -241,10 +309,20 @@ def api_publish(code):
         subprocess.run(["git", "worktree", "add", str(worktree), "origin/master"],
                        check=True, cwd=REPO, capture_output=True)
 
-        # Copy image into worktree
+        # Copy primary + extra images into worktree
         wt_images = worktree / "images"
         wt_images.mkdir(exist_ok=True)
         shutil.copy2(photo_src, wt_images / f"{code}.jpg")
+        images_list = [f"images/{code}.jpg"]
+        for slot in ("b", "c"):
+            extra_src = draft_dir / f"photo_{slot}.jpg"
+            if extra_src.exists():
+                shutil.copy2(extra_src, wt_images / f"{code}{slot}.jpg")
+                images_list.append(f"images/{code}{slot}.jpg")
+        if len(images_list) > 1:
+            entry["images"] = images_list
+        else:
+            entry.pop("images", None)
 
         # Update varieties.json
         wt_varieties = worktree / "varieties.json"
@@ -271,7 +349,7 @@ def api_publish(code):
                                 capture_output=True, check=True)
             return r
 
-        git("add", f"images/{code}.jpg", "varieties.json", "translations.json")
+        git("add", *images_list, "varieties.json", "translations.json")
         git("commit", "-m", f"Add variety {code} – {entry.get('name', code)}")
         git("push", "origin", "HEAD:master")
 
