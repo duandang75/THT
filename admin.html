@@ -600,6 +600,8 @@
     $('f-badge-vi').value  = d.badge_vi    || '';
 
     aiFields.hidden = false;
+    renderExtraSlot('b', d.id, false);
+    renderExtraSlot('c', d.id, false);
     loadExtraPhotos(d.id);
     clearAlert(alertGen);
     clearAlert(alertSave);
