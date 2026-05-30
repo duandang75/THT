@@ -459,6 +459,8 @@
       aiFields.hidden = false;
       editingCode = code;
       btnNew.hidden = false;
+      renderExtraSlot('b', code, false);
+      renderExtraSlot('c', code, false);
     } catch (err) {
       alert(alertGen, 'error', `Network error: ${err.message}`);
     } finally {
