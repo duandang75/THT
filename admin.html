@@ -257,7 +257,7 @@
             <input id="f-code" type="text" placeholder="e.g. THT042" autocomplete="off" spellcheck="false">
           </div>
           <button class="btn btn-accent" id="btn-generate">
-            <span id="gen-label">Generate with Claude</span>
+            <span id="gen-label">Generate Info</span>
             <span id="gen-spin" class="spin" hidden></span>
           </button>
         </div>
@@ -470,7 +470,7 @@
 
   function setGenerating(on) {
     btnGenerate.disabled = on;
-    genLabel.textContent = on ? 'Generating…' : 'Generate with Claude';
+    genLabel.textContent = on ? 'Generating…' : 'Generate Info';
     genSpin.hidden = !on;
   }
 
@@ -493,6 +493,28 @@
     clearAlert(alertSave);
     btnSave.disabled = true;
     btnSave.textContent = 'Saving…';
+
+    // Upload new primary photo first if the user replaced it
+    if (selectedFile) {
+      const photoForm = new FormData();
+      photoForm.append('image', selectedFile);
+      try {
+        const photoRes  = await fetch(`/api/drafts/${code}/photo`, { method: 'POST', body: photoForm });
+        const photoData = await photoRes.json();
+        if (!photoRes.ok) {
+          alert(alertSave, 'error', photoData.error || 'Photo upload failed.');
+          btnSave.disabled = false;
+          btnSave.textContent = 'Save Draft';
+          return;
+        }
+        selectedFile = null;
+      } catch (err) {
+        alert(alertSave, 'error', `Network error: ${err.message}`);
+        btnSave.disabled = false;
+        btnSave.textContent = 'Save Draft';
+        return;
+      }
+    }
 
     const badgeEn = $('f-badge-en').value.trim() || null;
     const payload = {

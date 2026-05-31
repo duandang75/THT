@@ -266,6 +266,35 @@ def api_draft_remove_extra(code, slot):
     (DRAFTS_DIR / code / f"photo_{slot}.jpg").unlink(missing_ok=True)
     return jsonify({"ok": True})
 
+@app.route("/api/drafts/<code>/photo", methods=["POST"])
+def api_draft_upload_primary(code):
+    code = code.upper()
+    image_file = request.files.get("image")
+    if not image_file:
+        return jsonify({"error": "image file is required."}), 400
+
+    draft_dir = DRAFTS_DIR / code
+    draft_dir.mkdir(exist_ok=True)
+
+    suffix = Path(image_file.filename).suffix.lower() or ".jpg"
+    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+        tmp_path = Path(tmp.name)
+        image_file.save(tmp_path)
+
+    photo_path = draft_dir / "photo.jpg"
+    try:
+        result = subprocess.run(
+            ["sips", "-Z", "1200", "--setProperty", "formatOptions", "85",
+             str(tmp_path), "--out", str(photo_path)],
+            capture_output=True
+        )
+        if result.returncode != 0:
+            return jsonify({"error": f"Image resize failed: {result.stderr.decode()}"}), 500
+    finally:
+        tmp_path.unlink(missing_ok=True)
+
+    return jsonify({"ok": True})
+
 
 # ── API: list drafts ──────────────────────────────────────────────────────────
 
