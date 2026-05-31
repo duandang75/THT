@@ -277,12 +277,13 @@ def api_draft_upload_primary(code):
     draft_dir.mkdir(exist_ok=True)
 
     suffix = Path(image_file.filename).suffix.lower() or ".jpg"
-    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
-        tmp_path = Path(tmp.name)
-        image_file.save(tmp_path)
-
-    photo_path = draft_dir / "photo.jpg"
+    tmp_path = None
     try:
+        with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+            tmp_path = Path(tmp.name)
+            image_file.save(tmp_path)
+
+        photo_path = draft_dir / "photo.jpg"
         result = subprocess.run(
             ["sips", "-Z", "1200", "--setProperty", "formatOptions", "85",
              str(tmp_path), "--out", str(photo_path)],
@@ -290,8 +291,11 @@ def api_draft_upload_primary(code):
         )
         if result.returncode != 0:
             return jsonify({"error": f"Image resize failed: {result.stderr.decode()}"}), 500
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 500
     finally:
-        tmp_path.unlink(missing_ok=True)
+        if tmp_path:
+            tmp_path.unlink(missing_ok=True)
 
     return jsonify({"ok": True})
 
