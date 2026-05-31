@@ -392,6 +392,18 @@ def api_publish(code):
         subprocess.run(["git", "worktree", "remove", str(worktree), "--force"],
                        cwd=REPO, capture_output=True)
 
+    # Sync images to local working directory so the dev server serves them immediately
+    local_images = REPO / "images"
+    local_images.mkdir(exist_ok=True)
+    shutil.copy2(photo_src, local_images / f"{code}.jpg")
+    for slot in ("b", "c"):
+        extra_src = draft_dir / f"photo_{slot}.jpg"
+        local_dest = local_images / f"{code}{slot}.jpg"
+        if extra_src.exists():
+            shutil.copy2(extra_src, local_dest)
+        else:
+            local_dest.unlink(missing_ok=True)
+
     shutil.rmtree(draft_dir, ignore_errors=True)
     return jsonify({"ok": True, "code": code, "name": entry.get("name", code)})
 
@@ -463,6 +475,11 @@ def api_remove(code):
     finally:
         subprocess.run(["git", "worktree", "remove", str(worktree), "--force"],
                        cwd=REPO, capture_output=True)
+
+    # Remove images from local working directory
+    local_images = REPO / "images"
+    for suffix in ("", "b", "c"):
+        (local_images / f"{code}{suffix}.jpg").unlink(missing_ok=True)
 
     return jsonify({"ok": True, "code": code})
 
