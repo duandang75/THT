@@ -404,6 +404,25 @@ def api_publish(code):
         else:
             local_dest.unlink(missing_ok=True)
 
+    # Sync varieties.json locally
+    with open(VARIETIES_JSON, encoding="utf-8") as f:
+        local_vars = json.load(f)
+    local_vars = [v for v in local_vars if v["id"] != code]
+    local_vars.insert(0, entry)
+    with open(VARIETIES_JSON, "w", encoding="utf-8") as f:
+        json.dump(local_vars, f, indent=2, ensure_ascii=False)
+
+    # Sync translations.json locally
+    local_trans_path = REPO / "translations.json"
+    with open(local_trans_path, encoding="utf-8") as f:
+        local_trans = json.load(f)
+    local_trans["en"][f"variety.{code}.name"]      = entry.get("name", "")
+    local_trans["en"][f"variety.{code}.shortDesc"] = entry.get("shortDesc", "")
+    local_trans["vi"][f"variety.{code}.name"]      = entry.get("name_vi", "")
+    local_trans["vi"][f"variety.{code}.shortDesc"] = entry.get("shortDesc_vi", "")
+    with open(local_trans_path, "w", encoding="utf-8") as f:
+        json.dump(local_trans, f, indent=2, ensure_ascii=False)
+
     shutil.rmtree(draft_dir, ignore_errors=True)
     return jsonify({"ok": True, "code": code, "name": entry.get("name", code)})
 
@@ -480,6 +499,23 @@ def api_remove(code):
     local_images = REPO / "images"
     for suffix in ("", "b", "c"):
         (local_images / f"{code}{suffix}.jpg").unlink(missing_ok=True)
+
+    # Sync varieties.json locally
+    with open(VARIETIES_JSON, encoding="utf-8") as f:
+        local_vars = json.load(f)
+    local_vars = [v for v in local_vars if v["id"] != code]
+    with open(VARIETIES_JSON, "w", encoding="utf-8") as f:
+        json.dump(local_vars, f, indent=2, ensure_ascii=False)
+
+    # Sync translations.json locally
+    local_trans_path = REPO / "translations.json"
+    with open(local_trans_path, encoding="utf-8") as f:
+        local_trans = json.load(f)
+    for lang in ("en", "vi"):
+        local_trans[lang].pop(f"variety.{code}.name", None)
+        local_trans[lang].pop(f"variety.{code}.shortDesc", None)
+    with open(local_trans_path, "w", encoding="utf-8") as f:
+        json.dump(local_trans, f, indent=2, ensure_ascii=False)
 
     return jsonify({"ok": True, "code": code})
 
