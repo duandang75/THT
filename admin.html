@@ -499,17 +499,18 @@
       const photoForm = new FormData();
       photoForm.append('image', selectedFile);
       try {
-        const photoRes  = await fetch(`/api/drafts/${code}/photo`, { method: 'POST', body: photoForm });
-        const photoData = await photoRes.json();
+        const photoRes = await fetch(`/api/drafts/${code}/photo`, { method: 'POST', body: photoForm });
         if (!photoRes.ok) {
-          alert(alertSave, 'error', photoData.error || 'Photo upload failed.');
+          let errMsg = 'Photo upload failed.';
+          try { errMsg = (await photoRes.json()).error || errMsg; } catch {}
+          alert(alertSave, 'error', errMsg);
           btnSave.disabled = false;
           btnSave.textContent = 'Save Draft';
           return;
         }
         selectedFile = null;
       } catch (err) {
-        alert(alertSave, 'error', `Network error: ${err.message}`);
+        alert(alertSave, 'error', `Photo upload failed: ${err.message}`);
         btnSave.disabled = false;
         btnSave.textContent = 'Save Draft';
         return;
